@@ -4,12 +4,12 @@
 
 SHOWCURSOR="\033[?25h"
 HIDECURSOR="\033[?25l"
-ENABLEWRAP="\033[?7h"
-DISABLEWRAP="\033[?7l"
+# ENABLEWRAP="\033[?7h"
+# DISABLEWRAP="\033[?7l"
 CLEAR="\033[2J\033[H"
 
 ITEMS=0
-export cursor=1
+cursor=1
 
 quit() {
     printf "%b" "$CLEAR$SHOWCURSOR"
@@ -32,32 +32,19 @@ getkey() {
 
 showui() {
     ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
+    header Tide: Transmission TUI
     goto 3 0
-
-    transmission-remote -l | sed '1d;$d' > /tmp/new
-
-    while read -r line; do
-        i=$((i + 1))
-        ns "$i"
-        if [ "$i" = "$cursor" ]; then
-            mark "$line"
-        else
-            echo "$line"
-        fi
-    done < /tmp/new
-    i=0
-
-    # transmission-remote -l |
-    #     sed '1d;$d' |
-    #     while read -r line; do
-    #         i=$((i + 1))
-    #         if [ "$i" = "$cursor" ]; then
-    #             mark "$line"
-    #         else
-    #             echo "$line"
-    #         fi
-    #     done
-
+    transmission-remote -l |
+        sed '1d;$d' |
+        while read -r line; do
+            i=$((i + 1))
+            if [ "$i" = "$cursor" ]; then
+                mark "$line"
+            else
+                echo "$line"
+            fi
+        done
+    footer l:Down k:Up n:Quit
 }
 
 mark() {
@@ -85,17 +72,13 @@ setscreen() {
     COLUMNS=$(stty size | cut -d' ' -f2)
 }
 
-trap 'setscreen' WINCH
 trap 'quit' INT
 
 setscreen
-header Tide: Transmission TUI
-footer l:Down k:Up n:Quit
-
 while :; do
     showui
     sleep 1
-done
+done &
 
 while :; do
     handleinput "$(getkey)"
