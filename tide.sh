@@ -2,6 +2,17 @@
 #
 # Minimal Transmission TUI
 
+#===============================================================================
+#                             Config
+#===============================================================================
+
+HEADER="Tide: Transmission TUI"
+FOOTER="l:Down k:Up n:Quit"
+
+#===============================================================================
+#                             Script
+#===============================================================================
+
 SHOWCURSOR="\033[?25h"
 HIDECURSOR="\033[?25l"
 # ENABLEWRAP="\033[?7h"
@@ -32,7 +43,6 @@ getkey() {
 
 showui() {
     ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
-    header Tide: Transmission TUI
     goto 3 0
     transmission-remote -l |
         sed '1d;$d' |
@@ -44,7 +54,6 @@ showui() {
                 echo "$line"
             fi
         done
-    footer l:Down k:Up n:Quit
 }
 
 mark() {
@@ -55,21 +64,22 @@ mark() {
 
 goto() { printf "%b" "\033[${1};${2}H"; }
 
-header() {
-    goto 1 "$((COLUMNS / 2 - 10))"
-    mark "$@"
-    printf "\n\n\n"
+setheader() {
+    goto 0 "$((COLUMNS / 2 - 10))"
+    mark "$HEADER"
 }
 
-footer() {
+setfooter() {
     goto "$((LINES - 1))" "$((COLUMNS / 2 - 10))"
-    mark "$@"
+    mark "$FOOTER"
 }
 
 setscreen() {
-    printf "%b" "$HIDECURSOR$CLEAR"
     LINES=$(stty size | cut -d' ' -f1)
     COLUMNS=$(stty size | cut -d' ' -f2)
+    printf "%b" "$HIDECURSOR$CLEAR"
+    setheader
+    setfooter
 }
 
 trap 'quit' INT
