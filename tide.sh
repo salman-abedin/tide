@@ -6,6 +6,7 @@
 # DISABLEWRAP="\033[?7l"
 
 ITEMS=0
+TIDEFIFO=/tmp/tide_fifo
 cursor=1
 
 quit() {
@@ -28,19 +29,19 @@ handleinput() {
     esac
 }
 
-showui() {
-    ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
-    goto 3 0
-    transmission-remote -l |
-        sed '1d;$d' |
-        while read -r line; do
-            i=$((i + 1))
-            if [ "$i" = "$cursor" ]; then
-                mark "$line"
-            else
-                echo "$line"
-            fi
-        done
+drawtorrents() {
+    goto 5 0
+    i=0
+    while read -r line; do
+        i=$((i + 1))
+        ns "$i $cursor"
+        if [ "$i" = "$cursor" ]; then
+            mark "$line"
+        else
+            echo "$line"
+        fi
+    done < "$TIDEFIFO"
+    # done < /tmp/tide
 }
 
 mark() {
@@ -50,23 +51,10 @@ mark() {
 }
 
 setscreen() {
-    printf "%b" "\033[?25l\033[2J\033[H"
+    printf "\033[?25l\033[2J\033[H"
     LINES=$(stty size | cut -d' ' -f1)
     COLUMNS=$(stty size | cut -d' ' -f2)
 }
-
-trap 'quit' INT
-
-setscreen
-while :; do
-    showui
-    sleep 1
-done &
-
-while :; do
-    handleinput
-    showui
-done
 
 goto() { printf "\033[%s;%sH" "$1" "$2"; }
 
@@ -88,9 +76,36 @@ setheader() {
     printf "\n\n\n"
 }
 
+init() {
+    ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
+    # if ! pidof transmission-daemon > /dev/null; then
+    #     transmission-daemon
+    #     sleep 1
+    # fi
+
+    [ -p "$TIDEFIFO" ] || mkfifo "$TIDEFIFO"
+    exec 3<> "$TIDEFIFO"
+    transmission-remote -l | sed '1d;$d' > "$TIDEFIFO" &
+}
+
 main() {
+    init
+    setscreen
     setborder
     setheader
     setfooter
+
+    trap 'quit' INT
+
+    # while :; do
+    #     drawtorrents
+    #     sleep 1
+    # done
+
+    while :; do
+        drawtorrents
+        handleinput
+    done
+
 }
 main
