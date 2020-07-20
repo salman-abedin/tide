@@ -77,9 +77,9 @@ setfooter() {
 
 setborder() {
     goto 3 0
-    for i in $(seq $COLUMNS); do printf "%s" "-"; done
+    for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
     goto "$((LINES - 2))" 0
-    for i in $(seq $COLUMNS); do printf "%s" "-"; done
+    for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
 }
 
 setheader() {
