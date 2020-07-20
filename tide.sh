@@ -32,9 +32,10 @@ handleinput() {
 drawtorrents() {
     goto 5 0
     i=0
+    transmission-remote -l | sed '1d;$d' > "$TIDEFIFO" &
     while read -r line; do
         i=$((i + 1))
-        ns "$i $cursor"
+        # ns "$i $cursor"
         if [ "$i" = "$cursor" ]; then
             mark "$line"
         else
@@ -83,9 +84,13 @@ init() {
     #     sleep 1
     # fi
 
+    # rm -f "$TIDEFIFO"
+    # mkfifo "$TIDEFIFO"
     [ -p "$TIDEFIFO" ] || mkfifo "$TIDEFIFO"
-    exec 3<> "$TIDEFIFO"
-    transmission-remote -l | sed '1d;$d' > "$TIDEFIFO" &
+    # exec 3<> "$TIDEFIFO"
+    # transmission-remote -l | sed '1d;$d' >&3 &
+    # transmission-remote -l | sed '1d;$d' > "$TIDEFIFO" &
+    # sleep 1
 }
 
 main() {
@@ -95,12 +100,12 @@ main() {
     setheader
     setfooter
 
-    trap 'quit' INT
+    trap 'quit' INT EXIT
 
-    # while :; do
-    #     drawtorrents
-    #     sleep 1
-    # done
+    while :; do
+        drawtorrents
+        sleep 1
+    done &
 
     while :; do
         drawtorrents
