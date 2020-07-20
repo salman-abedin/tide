@@ -6,7 +6,6 @@
 # DISABLEWRAP="\033[?7l"
 
 ITEMS=0
-TIDEFIFO=/tmp/tide_fifo
 cursor=1
 
 quit() {
@@ -32,16 +31,29 @@ handleinput() {
 drawtorrents() {
     goto 5 0
     i=0
-    transmission-remote -l | sed '1d;$d' > "$TIDEFIFO" &
-    while read -r line; do
-        i=$((i + 1))
-        # ns "$i $cursor"
-        if [ "$i" = "$cursor" ]; then
-            mark "$line"
-        else
-            echo "$line"
-        fi
-    done < "$TIDEFIFO"
+    ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
+    transmission-remote -l | sed '1d;$d' |
+        while read -r line; do
+            i=$((i + 1))
+            # ns "$i $cursor"
+            if [ "$i" = "$cursor" ]; then
+                mark "$line"
+            else
+                echo "$line"
+            fi
+        done
+
+    # transmission-remote -l | sed '1d;$d' > "$TIDEFIFO" &
+    # while read -r line; do
+    #     i=$((i + 1))
+    #     # ns "$i $cursor"
+    #     if [ "$i" = "$cursor" ]; then
+    #         mark "$line"
+    #     else
+    #         echo "$line"
+    #     fi
+    # done < "$TIDEFIFO"
+
     # done < /tmp/tide
 }
 
@@ -78,19 +90,10 @@ setheader() {
 }
 
 init() {
-    ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
     # if ! pidof transmission-daemon > /dev/null; then
     #     transmission-daemon
     #     sleep 1
     # fi
-
-    # rm -f "$TIDEFIFO"
-    # mkfifo "$TIDEFIFO"
-    [ -p "$TIDEFIFO" ] || mkfifo "$TIDEFIFO"
-    # exec 3<> "$TIDEFIFO"
-    # transmission-remote -l | sed '1d;$d' >&3 &
-    # transmission-remote -l | sed '1d;$d' > "$TIDEFIFO" &
-    # sleep 1
 }
 
 main() {
@@ -108,8 +111,8 @@ main() {
     done &
 
     while :; do
-        drawtorrents
         handleinput
+        drawtorrents
     done
 
 }
