@@ -2,43 +2,30 @@
 #
 # Minimal Transmission TUI
 
-#===============================================================================
-#                             Config
-#===============================================================================
-
-HEADER="Tide: Transmission TUI"
-FOOTER="l:Down k:Up n:Quit"
-
-#===============================================================================
-#                             Script
-#===============================================================================
-
-SHOWCURSOR="\033[?25h"
-HIDECURSOR="\033[?25l"
 # ENABLEWRAP="\033[?7h"
 # DISABLEWRAP="\033[?7l"
-CLEAR="\033[2J\033[H"
 
 ITEMS=0
 cursor=1
 
 quit() {
-    printf "%b" "$CLEAR$SHOWCURSOR"
+    printf "\033[?25h\033[2J\033[H"
     kill -- -$$
 }
 
+getkey() {
+    CURRENT_TTY_SETTINGS=$(stty -g)
+    stty -icanon -echo
+    head -c1
+    stty "$CURRENT_TTY_SETTINGS"
+}
+
 handleinput() {
-    case $1 in
+    case $(getkey) in
         l) [ "$cursor" -lt "$ITEMS" ] && cursor=$((cursor + 1)) ;;
         k) [ "$cursor" -gt 1 ] && cursor=$((cursor - 1)) ;;
         n) quit ;;
     esac
-}
-
-getkey() {
-    stty -icanon -echo
-    dd bs=1 count=1 2> /dev/null
-    stty icanon echo
 }
 
 showui() {
@@ -62,24 +49,10 @@ mark() {
     printf "\033[27m"
 }
 
-goto() { printf "%b" "\033[${1};${2}H"; }
-
-setheader() {
-    goto 0 "$((COLUMNS / 2 - 10))"
-    mark "$HEADER"
-}
-
-setfooter() {
-    goto "$((LINES - 1))" "$((COLUMNS / 2 - 10))"
-    mark "$FOOTER"
-}
-
 setscreen() {
+    printf "%b" "\033[?25l\033[2J\033[H"
     LINES=$(stty size | cut -d' ' -f1)
     COLUMNS=$(stty size | cut -d' ' -f2)
-    printf "%b" "$HIDECURSOR$CLEAR"
-    setheader
-    setfooter
 }
 
 trap 'quit' INT
@@ -91,6 +64,33 @@ while :; do
 done &
 
 while :; do
-    handleinput "$(getkey)"
+    handleinput
     showui
 done
+
+goto() { printf "\033[%s;%sH" "$1" "$2"; }
+
+setfooter() {
+    goto "$((LINES - 1))" "$((COLUMNS / 2 - 10))"
+    mark "h:Quit j:Down k:Up l:launch"
+}
+
+setborder() {
+    goto 3 0
+    for i in $(seq $COLUMNS); do printf "%s" "-"; done
+    goto "$((LINES - 2))" 0
+    for i in $(seq $COLUMNS); do printf "%s" "-"; done
+}
+
+setheader() {
+    goto 2 "$((COLUMNS / 2 - 10))"
+    mark "tide: Transmission Client"
+    printf "\n\n\n"
+}
+
+main() {
+    setborder
+    setheader
+    setfooter
+}
+# main
