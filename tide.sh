@@ -4,10 +4,11 @@
 # Dependencies: stty, head, read, printf, echo, cut, seq, cat
 
 cursor=/tmp/tide_cursor
-mark=/tmp/tide_mark
+marks=/tmp/tide_marks
 
 quit() {
     printf "\033[?7h\033[?25h\033[2J\033[H"
+    rm -f "$cursor" "$marks"
     kill -- -$$
 }
 
@@ -31,13 +32,13 @@ handleinput() {
     sendargs() { transmission-remote "$@" > /dev/null; }
     case $(getkey) in
         h)
-            sendargs -t "$(cat $mark)" -S
+            sendargs -t "$(cat $marks)" -S
             ;;
         l)
-            sendargs -t "$(cat $mark)" -s
+            sendargs -t "$(cat $marks)" -s
             ;;
         d)
-            sendargs -t "$(cat $mark)" -r
+            sendargs -t "$(cat $marks)" -r
             setscreen
             drawtorrents
             navigate -u
@@ -80,7 +81,7 @@ paint() {
 
 mark() {
     printf "\033[7m%s\033[27m\n" "$1"
-    echo "${1%% *}" > "$mark"
+    echo "${1%% *}" > "$marks"
 }
 
 goto() { printf "\033[%s;%sH" "$1" "$2"; }
