@@ -1,11 +1,67 @@
 #!/bin/sh
+#
+# Minimal Transmission Client
+# Dependencies: stty, head, read, printf, echo, cut, seq, cat
 
-marks=/tmp/marks
+cursor=/tmp/tide_cursor
+marks=/tmp/tide_marks
 
 quit() {
     printf "\033[?7h\033[?25h\033[2J\033[H"
-    rm -f $marks $cursor
+    rm -f "$cursor" "$marks"
     kill -- -$$
+}
+
+getkey() {
+    CURRENT_TTY_SETTINGS=$(stty -g)
+    stty -icanon -echo
+    head -c1
+    stty "$CURRENT_TTY_SETTINGS"
+}
+
+handleinput() {
+    navigate() {
+        ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
+        CURSOR=$(cat < "$cursor")
+        if [ "$1" = -u ]; then
+            echo $((CURSOR > 1 ? CURSOR - 1 : ITEMS)) > "$cursor"
+        else
+            echo $((CURSOR < ITEMS ? CURSOR + 1 : 1)) > "$cursor"
+        fi
+    }
+    sendargs() { transmission-remote "$@" > /dev/null; }
+    case $(getkey) in
+        h) sendargs -t "$(cat $marks)" -S ;;
+        l) sendargs -t "$(cat $marks)" -s ;;
+        d)
+            sendargs -t "$(cat $marks)" -r
+            setscreen
+            drawtorrents
+            navigate -u
+            ;;
+        k) navigate -u ;;
+        j) navigate -d ;;
+        q) quit ;;
+    esac
+}
+
+drawtorrents() {
+    goto 5 0
+    i=0
+    transmission-remote -l 2> /dev/null | sed '1d;$d' |
+        while read -r line; do
+            i=$((i + 1))
+            if [ "$i" = "$(cat $cursor)" ]; then
+                mark "$line"
+            else
+                case $line in
+                    *\ \ 100%*) paint -g "$line" ;;
+                    *\ \ Stopped*) paint -r "$line" ;;
+                    *\ \ Idle*) paint -y "$line" ;;
+                    *) paint -w "$line" ;;
+                esac
+            fi
+        done
 }
 
 paint() {
@@ -17,72 +73,6 @@ paint() {
         -w) printf "39m" ;;
     esac
     printf "%s\033[m\n" "$2"
-}
-
-getkey() {
-    CURRENT_TTY_SETTINGS=$(stty -g)
-    stty -icanon -echo
-    head -c1
-    stty "$CURRENT_TTY_SETTINGS"
-}
-
-handleinput() {
-    sendargs() { transmission-remote "$@" > /dev/null; }
-    navigate() {
-        ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
-        CURSOR=$(cat <&4)
-        if [ "$1" = -u ]; then
-            echo $((CURSOR > 1 ? CURSOR - 1 : ITEMS)) > "$cursor"
-        else
-            echo $((CURSOR < ITEMS ? CURSOR + 1 : 1)) > "$cursor"
-        fi
-    }
-    case $(getkey) in
-        j)
-            sendargs -t "$(cat $marks)" -S
-            ;;
-        ';')
-            sendargs -t "$(cat $marks)" -s
-            ;;
-        d)
-            sendargs -t "$(cat $marks)" -r
-            setscreen
-            drawtorrents
-            navigate -u
-            # echo $(($(cat $cursor) - 1)) > "$cursor"
-            ;;
-        k)
-            navigate -u
-            # ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
-            # CURSOR=$(cat <&4)
-            # echo $((CURSOR > 1 ? CURSOR - 1 : ITEMS)) > "$cursor"
-            ;;
-        l)
-            navigate -d
-            # ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
-            # CURSOR=$(cat <&4)
-            ;;
-        n) quit ;;
-    esac
-}
-
-drawtorrents() {
-    goto 5 0
-    i=0
-    transmission-remote -l | sed '1d;$d' |
-        while read -r line; do
-            i=$((i + 1))
-            if [ "$i" = "$(cat <&4)" ]; then
-                mark "$line"
-            else
-                case $line in
-                    *\ \ 100%*) paint -g "$line" ;;
-                    *\ \ Stopped*) paint -r "$line" ;;
-                    *\ \ Idle*) paint -y "$line" ;;
-                    *) paint -w "$line" ;;
-                esac
-            fi
-        done
 }
 
 mark() {
@@ -105,22 +95,22 @@ setscreen() {
     for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
     goto "$((LINES - 2))" 0
     for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
-    goto "$((LINES - 1))" "$((COLUMNS / 2 - 15))"
-    echo "You know the drill"
+    goto "$((LINES - 1))" "$((COLUMNS / 2 - 20))"
+    echo "h:Stop   j:Down   k:Up   l:Start   d:Delete   q:Quit"
 
     printf "\033[m"
+
 }
 
 init() {
-
-    # if ! pidof transmission-daemon > /dev/null; then
-    #     transmission-daemon
-    #     sleep 1
-    # fi
-
-    exec 3> mktemp # Cursor
-    exec 4< mktemp
-    echo 1 >&3
+    echo 1 > "$cursor"
+    if ! pidof transmission-daemon > /dev/null; then
+        transmission-daemon
+        setscreen
+        goto "$((LINES / 2))" "$((COLUMNS / 2 - 15))"
+        echo Loading the daemon. Chill.
+        sleep 3
+    fi
 }
 
 main() {
@@ -128,7 +118,6 @@ main() {
     setscreen
 
     trap 'quit' INT EXIT
-    trap 'setscreen' WINCH
 
     while :; do
         drawtorrents
@@ -139,6 +128,5 @@ main() {
         handleinput
         drawtorrents
     done
-
 }
 main
