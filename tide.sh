@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Minimal Transmission TUI
+# Minimal Transmission Client
 # Dependencies: stty, head, read, printf, echo, cut, seq, cat
 
 cursor=/tmp/tide_cursor
