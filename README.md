@@ -22,6 +22,10 @@ git clone https://github.com/salman-abedin/tide.git && cd tide && sudo make inst
 sudo make uninstall
 ```
 
+## TODOs
+
+-  Scrolling support
+
 ---
 
 ## Repos you might be interested in
