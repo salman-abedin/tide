@@ -31,6 +31,10 @@ handleinput() {
             ;;
         d)
             sendargs -t "$(cat $mark)" -r
+            setscreen
+            setheader
+            setfooter
+            drawtorrents
             ;;
         k)
             ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
@@ -53,11 +57,17 @@ drawtorrents() {
         while read -r line; do
             i=$((i + 1))
             if [ "$i" = "$(cat $cursor)" ]; then
-                mark "$line"
+                yellowfy "$line"
             else
                 echo "$line"
             fi
         done
+}
+
+yellowfy() {
+    printf "\033[33m"
+    echo "$1"
+    printf "\033[27m"
 }
 
 mark() {
@@ -70,20 +80,17 @@ mark() {
 goto() { printf "\033[%s;%sH" "$1" "$2"; }
 
 setfooter() {
-    goto "$((LINES - 1))" "$((COLUMNS / 2 - 10))"
-    mark "h:Quit j:Down k:Up l:launch"
-}
-
-setborder() {
-    goto 3 0
-    for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
     goto "$((LINES - 2))" 0
     for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
+    goto "$((LINES - 1))" "$((COLUMNS / 2 - 10))"
+    mark "h:Quit j:Down k:Up l:launch"
 }
 
 setheader() {
     goto 2 "$((COLUMNS / 2 - 10))"
     mark "tide: Transmission Client"
+    goto 3 0
+    for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
 }
 
 setscreen() {
@@ -105,7 +112,6 @@ init() {
 main() {
     init
     setscreen
-    setborder
     setheader
     setfooter
 
