@@ -1,14 +1,16 @@
 ![](preview.gif)
 
-# tide: A minimal Transmission CLI Client
+# tide: A minimal Transmission CLI client
 
-tide is a minimal TUI for the BitTorrent client [Transmission](https://transmissionbt.com/)
+tide is a minimal TUI for the BitTorrent client [Transmission](https://transmissionbt.com/).
+
+tide is ~100 lines of POSIX shellscript.
 
 ## Features
 
--  Pausing torrents
+-  Stopping torrents
 -  Starting torrents
--  Deleting torrents
+-  Deleting torrents (Including Files)
 
 ## Dependencies
 

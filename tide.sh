@@ -1,13 +1,14 @@
 #!/bin/sh
 #
-# Minimal Transmission TUI
+# Minimal Transmission Client
 # Dependencies: stty, head, read, printf, echo, cut, seq, cat
 
 cursor=/tmp/tide_cursor
-mark=/tmp/tide_mark
+marks=/tmp/tide_marks
 
 quit() {
     printf "\033[?7h\033[?25h\033[2J\033[H"
+    rm -f "$cursor" "$marks"
     kill -- -$$
 }
 
@@ -19,31 +20,27 @@ getkey() {
 }
 
 handleinput() {
+    navigate() {
+        ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
+        CURSOR=$(cat < "$cursor")
+        if [ "$1" = -u ]; then
+            echo $((CURSOR > 1 ? CURSOR - 1 : ITEMS)) > "$cursor"
+        else
+            echo $((CURSOR < ITEMS ? CURSOR + 1 : 1)) > "$cursor"
+        fi
+    }
     sendargs() { transmission-remote "$@" > /dev/null; }
     case $(getkey) in
-        h)
-            sendargs -t "$(cat $mark)" -S
-            ;;
-        l)
-            sendargs -t "$(cat $mark)" -s
-            ;;
+        h) sendargs -t "$(cat $marks)" -S ;;
+        l) sendargs -t "$(cat $marks)" -s ;;
         d)
-            sendargs -t "$(cat $mark)" -r
+            sendargs -t "$(cat $marks)" -rad
             setscreen
-            setheader
-            setfooter
             drawtorrents
-            echo $(($(cat $cursor) - 1)) > "$cursor"
+            navigate -u
             ;;
-        k)
-            [ "$(cat $cursor) " -gt 1 ] &&
-                echo $(($(cat $cursor) - 1)) > "$cursor"
-            ;;
-        j)
-            ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
-            [ "$(cat $cursor) " -lt "$ITEMS" ] &&
-                echo $(($(cat $cursor) + 1)) > "$cursor"
-            ;;
+        k) navigate -u ;;
+        j) navigate -d ;;
         q) quit ;;
     esac
 }
@@ -51,7 +48,7 @@ handleinput() {
 drawtorrents() {
     goto 5 0
     i=0
-    transmission-remote -l | sed '1d;$d' |
+    transmission-remote -l 2> /dev/null | sed '1d;$d' |
         while read -r line; do
             i=$((i + 1))
             if [ "$i" = "$(cat $cursor)" ]; then
@@ -75,12 +72,12 @@ paint() {
         -y) printf "33m" ;;
         -w) printf "39m" ;;
     esac
-    printf "%s\033[0m\n" "$2"
+    printf "%s\033[m\n" "$2"
 }
 
 mark() {
     printf "\033[7m%s\033[27m\n" "$1"
-    echo "${1%% *}" > "$mark"
+    echo "${1%% *}" > "$marks"
 }
 
 goto() { printf "\033[%s;%sH" "$1" "$2"; }
@@ -93,24 +90,27 @@ setscreen() {
     printf "\033[2m"
 
     goto 2 "$((COLUMNS / 2 - 10))"
-    echo "tide: Transmission Client"
+    echo "tide: Tiny Transmission Client"
     goto 3 0
     for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
     goto "$((LINES - 2))" 0
     for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
     goto "$((LINES - 1))" "$((COLUMNS / 2 - 20))"
-    echo "h:Pause   j:Down   k:Up   l:Start   d:Delete   q:Quit"
+    echo "h:Stop   j:Down   k:Up   l:Start   d:Delete   q:Quit"
 
-    printf "\033[0m"
+    printf "\033[m"
 
 }
 
 init() {
-    # if ! pidof transmission-daemon > /dev/null; then
-    #     transmission-daemon
-    #     sleep 1
-    # fi
     echo 1 > "$cursor"
+    if ! pidof transmission-daemon > /dev/null; then
+        transmission-daemon
+        setscreen
+        goto "$((LINES / 2))" "$((COLUMNS / 2 - 15))"
+        echo Loading the daemon. Chill.
+        sleep 3
+    fi
 }
 
 main() {
