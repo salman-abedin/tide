@@ -4,7 +4,7 @@
 # Dependencies: stty, head, read, printf, echo, cut, seq, cat
 
 cursor=/tmp/tide_cursor
-mark=/tmp/mark
+mark=/tmp/tide_mark
 
 quit() {
     printf "\033[?7h\033[?25h\033[2J\033[H"
