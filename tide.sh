@@ -89,17 +89,21 @@ mark() {
 goto() { printf "\033[%s;%sH" "$1" "$2"; }
 
 setfooter() {
+    printf "\033[2m"
     goto "$((LINES - 2))" 0
     for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
     goto "$((LINES - 1))" "$((COLUMNS / 2 - 15))"
-    paint -d "h:Pause j:Down k:Up l:Start d:Delete q:Quit"
+    echo "h:Pause j:Down k:Up l:Start d:Delete q:Quit"
+    printf "\033[0m"
 }
 
 setheader() {
+    printf "\033[2m"
     goto 2 "$((COLUMNS / 2 - 10))"
-    paint -d "tide: Transmission Client"
+    echo "tide: Transmission Client"
     goto 3 0
     for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
+    printf "\033[0m"
 }
 
 setscreen() {
