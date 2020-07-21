@@ -82,7 +82,7 @@ paint() {
         -y) printf "33m" ;;
         -w) printf "39m" ;;
     esac
-    printf "%s\033[0m\n" "$2"
+    printf "%s\033[m\n" "$2"
 }
 
 mark() {
@@ -108,7 +108,7 @@ setscreen() {
     goto "$((LINES - 1))" "$((COLUMNS / 2 - 20))"
     echo "h:Pause   j:Down   k:Up   l:Start   d:Delete   q:Quit"
 
-    printf "\033[0m"
+    printf "\033[m"
 
 }
 
