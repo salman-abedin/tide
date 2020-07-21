@@ -44,6 +44,7 @@ handleinput() {
             ;;
         n) quit ;;
     esac
+    ns catch
 }
 
 drawtorrents() {
