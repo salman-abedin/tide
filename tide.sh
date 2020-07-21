@@ -73,8 +73,10 @@ paint() {
         -r) printf "\033[31m" ;;
         -g) printf "\033[32m" ;;
         -y) printf "\033[33m" ;;
+        -b) printf "\033[34m" ;;
         -w) printf "\033[39m" ;;
         -i) printf "\033[7m" ;;
+        -d) printf "\033[2m" ;;
     esac
     printf "%s\033[0m\n" "$2"
 }
@@ -90,12 +92,12 @@ setfooter() {
     goto "$((LINES - 2))" 0
     for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
     goto "$((LINES - 1))" "$((COLUMNS / 2 - 15))"
-    paint -i "h:Pause j:Down k:Up l:Start d:Delete q:Quit"
+    paint -d "h:Pause j:Down k:Up l:Start d:Delete q:Quit"
 }
 
 setheader() {
     goto 2 "$((COLUMNS / 2 - 10))"
-    paint -i "tide: Transmission Client"
+    paint -d "tide: Transmission Client"
     goto 3 0
     for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
 }
