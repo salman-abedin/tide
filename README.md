@@ -6,7 +6,7 @@ tide is a minimal TUI for the BitTorrent client [Transmission](https://transmiss
 
 ## Features
 
--  Pausing torrents
+-  Stopping torrents
 -  Starting torrents
 -  Deleting torrents
 

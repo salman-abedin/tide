@@ -100,13 +100,13 @@ setscreen() {
     printf "\033[2m"
 
     goto 2 "$((COLUMNS / 2 - 10))"
-    echo "tide: Transmission Client"
+    echo "tide: Tiny Transmission Client"
     goto 3 0
     for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
     goto "$((LINES - 2))" 0
     for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
     goto "$((LINES - 1))" "$((COLUMNS / 2 - 20))"
-    echo "h:Pause   j:Down   k:Up   l:Start   d:Delete   q:Quit"
+    echo "h:Stop   j:Down   k:Up   l:Start   d:Delete   q:Quit"
 
     printf "\033[m"
 
