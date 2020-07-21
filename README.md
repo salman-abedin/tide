@@ -8,7 +8,7 @@ tide is a minimal TUI for controlling Transmission daemon
 
 -  **transmission-cli**
 
--  grep, sed, sort, uniq, tr, wc, cut, stty, head, read, printf, echo, seq
+-  stty, head, read, printf, echo, cut, seq, cat
 
 ## Installation
 
@@ -16,38 +16,11 @@ tide is a minimal TUI for controlling Transmission daemon
 git clone https://github.com/salman-abedin/puri.git && cd puri && sudo make install
 ```
 
-## Usage
-
-#### Tmux
-
-```tmux
-bind u run 'tmux capture-pane -p > /tmp/tb' \; \
-  new-window -n puri 'puri /tmp/tb && rm -f /tmp/tb'
-```
-
-#### Mutt/Neomutt
-
-```muttrc
-macro index,pager o "<pipe-entry>tee /tmp/muttb<enter><shell-escape>puri /tmp/muttb<enter>"
-macro index,pager o "<pipe-message>tee /tmp/muttb<enter><shell-escape>puri /tmp/muttb<enter>"
-```
-
-#### Shell
-
-```sh
-puri [FILE...]
-```
-
 ## Uninstallation
 
 ```sh
 sudo make uninstall
 ```
-
-## Similar Projects
-
--  [urlscan](https://github.com/firecat53/urlscan)
--  [urlview](https://github.com/sigpipe/urlview)
 
 ---
 
@@ -58,6 +31,9 @@ sudo make uninstall
 
 [Uniblocks](https://github.com/salman-abedin/uniblocks)
 : The status bar wrapper
+
+[puri](https://github.com/salman-abedin/puri)
+: minimal URL launcher
 
 [Crystal](https://github.com/salman-abedin/crystal)
 : The transparent setup

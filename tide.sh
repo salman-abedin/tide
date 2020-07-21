@@ -25,7 +25,7 @@ handleinput() {
             sendargs -t "$(cat $mark)" -S
             ;;
         ';')
-            sendargs -t "$(cat $mark)" -s && ns did it
+            sendargs -t "$(cat $mark)" -s
             ;;
         d)
             sendargs -t "$(cat $mark)" -r
@@ -92,8 +92,8 @@ setfooter() {
     printf "\033[2m"
     goto "$((LINES - 2))" 0
     for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
-    goto "$((LINES - 1))" "$((COLUMNS / 2 - 15))"
-    echo "h:Pause j:Down k:Up l:Start d:Delete q:Quit"
+    goto "$((LINES - 1))" "$((COLUMNS / 2 - 20))"
+    echo "h:Pause   j:Down   k:Up   l:Start   d:Delete   q:Quit"
     printf "\033[0m"
 }
 
