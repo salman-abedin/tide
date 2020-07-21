@@ -1,8 +1,8 @@
 ![](preview.gif)
 
-# tide: A minimal CLI Transmission Client
+# tide: A minimal Transmission CLI Client
 
-tide is a minimal TUI for controlling Transmission daemon
+tide is a minimal TUI for the BitTorrent client [Transmission](https://transmissionbt.com/)
 
 ## Dependencies
 
