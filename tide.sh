@@ -73,10 +73,7 @@ paint() {
         -r) printf "\033[31m" ;;
         -g) printf "\033[32m" ;;
         -y) printf "\033[33m" ;;
-        -b) printf "\033[34m" ;;
         -w) printf "\033[39m" ;;
-        -i) printf "\033[7m" ;;
-        -d) printf "\033[2m" ;;
     esac
     printf "%s\033[0m\n" "$2"
 }
@@ -137,6 +134,5 @@ main() {
         handleinput
         drawtorrents
     done
-
 }
 main
