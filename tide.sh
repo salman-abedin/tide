@@ -85,28 +85,24 @@ mark() {
 
 goto() { printf "\033[%s;%sH" "$1" "$2"; }
 
-setfooter() {
-    printf "\033[2m"
-    goto "$((LINES - 2))" 0
-    for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
-    goto "$((LINES - 1))" "$((COLUMNS / 2 - 20))"
-    echo "h:Pause   j:Down   k:Up   l:Start   d:Delete   q:Quit"
-    printf "\033[0m"
-}
-
-setheader() {
-    printf "\033[2m"
-    goto 2 "$((COLUMNS / 2 - 10))"
-    echo "tide: Transmission Client"
-    goto 3 0
-    for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
-    printf "\033[0m"
-}
-
 setscreen() {
     printf "\033[?7l\033[?25l\033[2J\033[H"
     LINES=$(stty size | cut -d' ' -f1)
     COLUMNS=$(stty size | cut -d' ' -f2)
+
+    printf "\033[2m"
+
+    goto 2 "$((COLUMNS / 2 - 10))"
+    echo "tide: Transmission Client"
+    goto 3 0
+    for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
+    goto "$((LINES - 2))" 0
+    for i in $(seq "$COLUMNS"); do printf "%s" "-"; done
+    goto "$((LINES - 1))" "$((COLUMNS / 2 - 20))"
+    echo "h:Pause   j:Down   k:Up   l:Start   d:Delete   q:Quit"
+
+    printf "\033[0m"
+
 }
 
 init() {
@@ -120,8 +116,6 @@ init() {
 main() {
     init
     setscreen
-    setheader
-    setfooter
 
     trap 'quit' INT EXIT
 
