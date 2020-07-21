@@ -31,12 +31,8 @@ handleinput() {
     }
     sendargs() { transmission-remote "$@" > /dev/null; }
     case $(getkey) in
-        h)
-            sendargs -t "$(cat $marks)" -S
-            ;;
-        l)
-            sendargs -t "$(cat $marks)" -s
-            ;;
+        h) sendargs -t "$(cat $marks)" -S ;;
+        l) sendargs -t "$(cat $marks)" -s ;;
         d)
             sendargs -t "$(cat $marks)" -r
             setscreen
@@ -112,7 +108,7 @@ init() {
         transmission-daemon
         setscreen
         goto "$((LINES / 2))" "$((COLUMNS / 2 - 15))"
-        echo Loading the daemon. Chill 3s.
+        echo Loading the daemon. Chill.
         sleep 3
     fi
 }
