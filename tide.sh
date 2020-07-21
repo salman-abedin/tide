@@ -36,7 +36,6 @@ handleinput() {
             echo $(($(cat $cursor) - 1)) > "$cursor"
             ;;
         k)
-            ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
             [ "$(cat $cursor) " -gt 1 ] &&
                 echo $(($(cat $cursor) - 1)) > "$cursor"
             ;;
@@ -69,11 +68,12 @@ drawtorrents() {
 }
 
 paint() {
+    printf "\033["
     case $1 in
-        -r) printf "\033[31m" ;;
-        -g) printf "\033[32m" ;;
-        -y) printf "\033[33m" ;;
-        -w) printf "\033[39m" ;;
+        -r) printf "31m" ;;
+        -g) printf "32m" ;;
+        -y) printf "33m" ;;
+        -w) printf "39m" ;;
     esac
     printf "%s\033[0m\n" "$2"
 }
