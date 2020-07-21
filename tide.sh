@@ -39,27 +39,11 @@ handleinput() {
         d)
             sendargs -t "$(cat $mark)" -r
             setscreen
-            setheader
-            setfooter
             drawtorrents
-            echo $(($(cat $cursor) - 1)) > "$cursor"
+            navigate -u
             ;;
-        k)
-            ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
-            if [ "$(cat $cursor) " -gt 1 ]; then
-                echo $(($(cat $cursor) - 1)) > "$cursor"
-            else
-                echo "$ITEMS" > "$cursor"
-            fi
-            ;;
-        j)
-            ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
-            if [ "$(cat $cursor) " -lt "$ITEMS" ]; then
-                echo $(($(cat $cursor) + 1)) > "$cursor"
-            else
-                echo 1 > "$cursor"
-            fi
-            ;;
+        k) navigate -u ;;
+        j) navigate -d ;;
         q) quit ;;
     esac
 }
@@ -67,7 +51,7 @@ handleinput() {
 drawtorrents() {
     goto 5 0
     i=0
-    transmission-remote -l | sed '1d;$d' |
+    transmission-remote -l 2> /dev/null | sed '1d;$d' |
         while read -r line; do
             i=$((i + 1))
             if [ "$i" = "$(cat $cursor)" ]; then
@@ -122,11 +106,14 @@ setscreen() {
 }
 
 init() {
-    # if ! pidof transmission-daemon > /dev/null; then
-    #     transmission-daemon
-    #     sleep 1
-    # fi
     echo 1 > "$cursor"
+    if ! pidof transmission-daemon > /dev/null; then
+        transmission-daemon
+        setscreen
+        goto "$((LINES / 2))" "$((COLUMNS / 2 - 15))"
+        echo Loading the daemon. Chill 3s.
+        sleep 3
+    fi
 }
 
 main() {
