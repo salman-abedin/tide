@@ -13,7 +13,7 @@ tide is a minimal TUI for controlling Transmission daemon
 ## Installation
 
 ```sh
-git clone https://github.com/salman-abedin/puri.git && cd puri && sudo make install
+git clone https://github.com/salman-abedin/tide.git && cd tide && sudo make install
 ```
 
 ## Uninstallation

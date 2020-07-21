@@ -21,10 +21,10 @@ getkey() {
 handleinput() {
     sendargs() { transmission-remote "$@" > /dev/null; }
     case $(getkey) in
-        j)
+        h)
             sendargs -t "$(cat $mark)" -S
             ;;
-        ';')
+        l)
             sendargs -t "$(cat $mark)" -s
             ;;
         d)
@@ -40,12 +40,12 @@ handleinput() {
             [ "$(cat $cursor) " -gt 1 ] &&
                 echo $(($(cat $cursor) - 1)) > "$cursor"
             ;;
-        l)
+        j)
             ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
             [ "$(cat $cursor) " -lt "$ITEMS" ] &&
                 echo $(($(cat $cursor) + 1)) > "$cursor"
             ;;
-        n) quit ;;
+        q) quit ;;
     esac
 }
 
