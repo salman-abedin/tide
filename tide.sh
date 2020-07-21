@@ -36,13 +36,20 @@ handleinput() {
             echo $(($(cat $cursor) - 1)) > "$cursor"
             ;;
         k)
-            [ "$(cat $cursor) " -gt 1 ] &&
+            ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
+            if [ "$(cat $cursor) " -gt 1 ]; then
                 echo $(($(cat $cursor) - 1)) > "$cursor"
+            else
+                echo "$ITEMS" > "$cursor"
+            fi
             ;;
         j)
             ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
-            [ "$(cat $cursor) " -lt "$ITEMS" ] &&
+            if [ "$(cat $cursor) " -lt "$ITEMS" ]; then
                 echo $(($(cat $cursor) + 1)) > "$cursor"
+            else
+                echo 1 > "$cursor"
+            fi
             ;;
         q) quit ;;
     esac
