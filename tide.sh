@@ -44,7 +44,6 @@ handleinput() {
             ;;
         n) quit ;;
     esac
-    ns catch
 }
 
 drawtorrents() {
@@ -85,7 +84,6 @@ setborder() {
 setheader() {
     goto 2 "$((COLUMNS / 2 - 10))"
     mark "tide: Transmission Client"
-    printf "\n\n\n"
 }
 
 setscreen() {
