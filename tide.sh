@@ -19,6 +19,15 @@ getkey() {
 }
 
 handleinput() {
+    navigate() {
+        ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
+        CURSOR=$(cat < "$cursor")
+        if [ "$1" = -u ]; then
+            echo $((CURSOR > 1 ? CURSOR - 1 : ITEMS)) > "$cursor"
+        else
+            echo $((CURSOR < ITEMS ? CURSOR + 1 : 1)) > "$cursor"
+        fi
+    }
     sendargs() { transmission-remote "$@" > /dev/null; }
     case $(getkey) in
         h)
