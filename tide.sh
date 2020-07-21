@@ -113,12 +113,10 @@ setscreen() {
 }
 
 init() {
-
     # if ! pidof transmission-daemon > /dev/null; then
     #     transmission-daemon
     #     sleep 1
     # fi
-
     echo 1 > "$cursor"
 }
 
@@ -129,7 +127,6 @@ main() {
     setfooter
 
     trap 'quit' INT EXIT
-    trap 'notify-send wc' WINCH
 
     while :; do
         drawtorrents
