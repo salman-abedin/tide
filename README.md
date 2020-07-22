@@ -4,7 +4,7 @@
 
 tide is a minimal TUI for the BitTorrent client [Transmission](https://transmissionbt.com/).
 
-tide is ~100 lines of POSIX shellscript.
+tide is ~100 lines of POSIX shellscript and a love letter to [torque](https://github.com/dylanaraps/torque)
 
 ## Features
 
