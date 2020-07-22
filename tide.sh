@@ -48,10 +48,11 @@ handleinput() {
 drawtorrents() {
     goto 5 0
     i=0
+    read -r c < "$cursor"
     transmission-remote -l 2> /dev/null | sed '1d;$d' |
         while read -r line; do
             i=$((i + 1))
-            if [ "$i" = "$(cat $cursor)" ]; then
+            if [ "$i" = "$c" ]; then
                 mark "$line"
             else
                 case $line in
