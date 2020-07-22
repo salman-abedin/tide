@@ -32,7 +32,8 @@ sudo make uninstall
 
 ## TODOs
 
--  Scrolling support
+-  Scrolling
+-  Marking
 -  Magnet Adding
 
 ---
