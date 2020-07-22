@@ -22,7 +22,7 @@ getkey() {
 handleinput() {
     navigate() {
         ITEMS=$(transmission-remote -l | sed '1d;$d' | wc -l)
-        CURSOR=$(cat < "$cursor")
+        read -r CURSOR < "$cursor"
         if [ "$1" = -u ]; then
             echo $((CURSOR > 1 ? CURSOR - 1 : ITEMS)) > "$cursor"
         else
@@ -48,11 +48,11 @@ handleinput() {
 drawtorrents() {
     goto 5 0
     i=0
-    read -r c < "$cursor"
+    read -r CURSOR < "$cursor"
     transmission-remote -l 2> /dev/null | sed '1d;$d' |
         while read -r line; do
             i=$((i + 1))
-            if [ "$i" = "$c" ]; then
+            if [ "$i" = "$CURSOR" ]; then
                 mark "$line"
             else
                 case $line in
