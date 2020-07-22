@@ -17,7 +17,7 @@ tide is ~100 lines of POSIX shellscript and a love letter to [torque](https://gi
 
 -  **transmission-cli**
 
--  stty, head, read, printf, echo, cut, seq, cat
+-  stty, head, cut, seq, cat
 
 ## Installation
 
