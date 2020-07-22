@@ -32,7 +32,6 @@ sudo make uninstall
 
 ## TODOs
 
--  Prevent glitches (lol)
 -  Scrolling support
 -  Magnet Adding
 

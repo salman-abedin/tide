@@ -14,7 +14,7 @@ quit() {
 
 getkey() {
     CURRENT_TTY_SETTINGS=$(stty -g)
-    stty -icanon -echo
+    stty -icanon -echo min 0 time 10
     head -c1
     stty "$CURRENT_TTY_SETTINGS"
 }
@@ -118,15 +118,11 @@ main() {
     setscreen
 
     trap 'quit' INT EXIT
+    trap 'setscreen' WINCH
 
     while :; do
         drawtorrents
-        sleep 1
-    done &
-
-    while :; do
         handleinput
-        drawtorrents
     done
 }
 main
