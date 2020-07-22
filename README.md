@@ -8,6 +8,7 @@ tide is ~100 lines of POSIX shellscript and a love letter to [torque](https://gi
 
 ## Features
 
+-  Vim bindings
 -  Stopping torrents
 -  Starting torrents
 -  Deleting torrents (Including Files)
