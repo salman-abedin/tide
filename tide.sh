@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Minimal Transmission Client
-# Dependencies: stty, head, read, printf, echo, cut, seq, cat
+# Dependencies: stty, head, cut, seq, cat
 
 cursor=/tmp/tide_cursor
 marks=/tmp/tide_marks
