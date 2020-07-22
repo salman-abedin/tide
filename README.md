@@ -10,7 +10,7 @@ tide is ~100 lines of POSIX shellscript.
 
 -  Stopping torrents
 -  Starting torrents
--  Deleting torrents
+-  Deleting torrents (Including Files)
 
 ## Dependencies
 

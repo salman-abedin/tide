@@ -34,7 +34,7 @@ handleinput() {
         h) sendargs -t "$(cat $marks)" -S ;;
         l) sendargs -t "$(cat $marks)" -s ;;
         d)
-            sendargs -t "$(cat $marks)" -r
+            sendargs -t "$(cat $marks)" -rad
             setscreen
             drawtorrents
             navigate -u
