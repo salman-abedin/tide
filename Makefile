@@ -1,16 +1,16 @@
-.POSIX:
-PREFIX = /usr/local
+include config.mk
 
-install:
-	@mkdir -p ${DESTDIR}${PREFIX}/bin
-	@for e in *.sh; do \
-		cp -f $$e $${e%.*}; \
-		chmod 755 $${e%.*}; \
-		mv $${e%.*} ${DESTDIR}${PREFIX}/bin; \
-		done
-	@echo Done installing executable files to ${DESTDIR}${PREFIX}/bin
+OBJ = $(SRC:.c=.o)
+SRC = $(wildcard src/*.c)
+
+all: $(NAME)
+$(NAME): $(OBJ)
+install: all
+	@mkdir -p "$(DESTDIR)$(BINPREFIX)"
+	@mv $(NAME) "$(DESTDIR)$(BINPREFIX)"
+	@rm -f $(OBJ)
+	@echo Done moving the binary to ${DESTDIR}${BINPREFIX}
 uninstall:
-	@for e in *.sh;do \
-		rm -f ${DESTDIR}${PREFIX}/bin/$${e%.*}; \
-		done
-	@echo Done removing executable files from ${DESTDIR}${PREFIX}/bin
+	@rm -f "$(DESTDIR)$(BINPREFIX)/$(NAME)"
+	@echo Done removing the binary from ${DESTDIR}${BINPREFIX}
+.PHONY: all install uninstall
