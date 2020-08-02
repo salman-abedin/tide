@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Minimal Transmission Client
-# Dependencies: head, cut, seq, cat
+# Dependencies: head, cut, seq, cat, sleep
 
 cursor=/tmp/tide_cursor
 marks=/tmp/tide_marks
