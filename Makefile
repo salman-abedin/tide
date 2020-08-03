@@ -1,10 +1,15 @@
-PREFIX = /usr/local
+.POSIX:
+
+NAME   := tide
+BINPREFIX ?= /usr/local/bin
+
 install:
-	@cp tide.sh tide
-	@chmod 755 tide
-	@mkdir -p ${DESTDIR}${PREFIX}/bin
-	@mv tide ${DESTDIR}${PREFIX}/bin
-	@echo Done installing executable files to ${DESTDIR}${PREFIX}/bin
+	@mkdir -p ${DESTDIR}${BINPREFIX}
+	@cp tide.sh ${DESTDIR}${BINPREFIX}/${NAME}
+	@chmod 755 ${DESTDIR}${BINPREFIX}/${NAME}
+	@echo Done installing executable files to ${DESTDIR}${BINPREFIX}
 uninstall:
-	@rm -f ${DESTDIR}${PREFIX}/bin/tide
-	@echo Done removing executable files from ${DESTDIR}${PREFIX}/bin
+	@rm -f ${DESTDIR}${BINPREFIX}/${NAME}
+	@echo Done removing executable files from ${DESTDIR}${BINPREFIX}
+
+.PHONY: all install uninstall clean
