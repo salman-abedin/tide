@@ -31,16 +31,16 @@ handleinput() {
     }
     sendargs() { transmission-remote "$@" > /dev/null; }
     case $(getkey) in
-        h) sendargs -t "$(cat $marks)" -S ;;
-        l) sendargs -t "$(cat $marks)" -s ;;
-        d)
+        j) sendargs -t "$(cat $marks)" -S ;;
+        ';') sendargs -t "$(cat $marks)" -s ;;
+        h)
             sendargs -t "$(cat $marks)" -rad
             setscreen
             drawtorrents
             navigate -u
             ;;
         k) navigate -u ;;
-        j) navigate -d ;;
+        l) navigate -d ;;
         q) quit ;;
     esac
 }
@@ -58,7 +58,7 @@ drawtorrents() {
                 case $line in
                     *\ \ 100%*) paint -g "$line" ;;
                     *\ \ Stopped*) paint -r "$line" ;;
-                    *\ \ Idle*) paint -y "$line" ;;
+                    *\ \ Queued*) paint -y "$line" ;;
                     *) paint -w "$line" ;;
                 esac
             fi
