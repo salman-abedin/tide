@@ -4,8 +4,6 @@
 
 tide is a minimal TUI for the BitTorrent client [Transmission](https://transmissionbt.com/).
 
-tide is a ~100 line POSIX shellscript and a love letter to [torque](https://github.com/dylanaraps/torque)
-
 ## Features
 
 -  Vim bindings
@@ -13,11 +11,10 @@ tide is a ~100 line POSIX shellscript and a love letter to [torque](https://gith
 -  Starting torrents
 -  Deleting torrents (Including Files)
 
-## Dependencies
+## Libraries
 
--  **transmission-cli**
+- ncurses
 
--  head, cut, seq, cat, sleep
 
 ## Installation
 
