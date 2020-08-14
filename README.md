@@ -2,7 +2,8 @@
 
 # tide: A minimal Transmission CLI client
 
-tide is a minimal TUI for the BitTorrent client [Transmission](https://transmissionbt.com/).
+tide is a minimal TUI for the BitTorrent client [Transmission](https://transmissionbt.com/).  
+tide is the successor to [puri.sh](https://github.com/salman-abedin/tide.sh)
 
 ## Features
 
