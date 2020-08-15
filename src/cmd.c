@@ -19,8 +19,10 @@ cmd_t init_cmd(char* cmd_str) {
 
    lines = 0;
    while (fgets(line, 1024, pipe)) {
-      strcpy(cmd.outputs[lines++], line);
-      if (lines == capacity) {
+      ++lines;
+      if (lines == 1) continue;
+      strcpy(cmd.outputs[lines - 2], line);
+      if (lines - 2 == capacity) {
          capacity *= 2;
          cmd.outputs = realloc(cmd.outputs, sizeof(char*) * capacity);
          for (i = 0; i < capacity; ++i)
@@ -28,7 +30,6 @@ cmd_t init_cmd(char* cmd_str) {
       }
    }
    pclose(pipe);
-
-   cmd.lines = lines;
+   cmd.lines = lines - 2;
    return cmd;
 }

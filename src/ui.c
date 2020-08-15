@@ -25,6 +25,7 @@ void drawui() {
    mvprintw(0, (width - strlen(HEADER)) / 2, HEADER);
    mvprintw(height - 1, (width - strlen(FOOTER)) / 2, FOOTER);
    win = newwin(wheight, wwidth, 2, (width - wwidth) / 2);
+   refresh();
 }
 
 void drawitems() {
