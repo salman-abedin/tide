@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "cmd.h"
 #include "ui.h"
 
 int mark, start, end, width, height, wwidth, wheight, count, i, j;
@@ -16,7 +17,6 @@ void init_ui() {
    getmaxyx(stdscr, height, width);
    wwidth = width;
    wheight = height - 4;
-   end = count > wheight - 2 ? wheight - 2 : count;
 }
 
 void drawui() {
@@ -29,6 +29,12 @@ void drawui() {
 void _drawitems() {
    werase(win);
    box(win, 0, 0);
+
+   cmd_t cmd = init_cmd("transmission-remote -l");
+   items = cmd.outputs;
+   count = cmd.lines;
+   end = count > wheight - 2 ? wheight - 2 : count;
+
    for (i = 1, j = start; j < end; ++i, ++j) {
       if (i - 1 == mark) wattron(win, A_REVERSE);
       mvwaddnstr(win, i, 1, items[j], wwidth - 2);
@@ -43,8 +49,9 @@ void handleinput() {
    char* tail = "> /dev/null 2>&1";
 
    halfdelay(10);
-   while ((key = wgetch(win)) != 'h') {
+   while (1) {
       _drawitems();
+      key = wgetch(win);
       if (key == 'j') {
          if (mark < wheight - 3 && mark < end - 1) {
             ++mark;
@@ -71,9 +78,15 @@ void handleinput() {
       } else if (key == 'l') {
          sprintf(cmd, "%s -t %.10s -s %s", head, items[mark], tail);
          system(cmd);
-      } else if (key == 'n') {
+      } else if (key == 'h') {
          sprintf(cmd, "%s -t %.10s -S %s", head, items[mark], tail);
          system(cmd);
+      } else if (key == 'd') {
+         sprintf(cmd, "%s -t %.10s -rad %s", head, items[mark], tail);
+         system(cmd);
+         --mark;
+      } else if (key == 'q') {
+         break;
       }
    }
 }
