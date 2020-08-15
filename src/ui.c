@@ -2,49 +2,91 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "cmd.h"
 #include "ui.h"
 
-int mark, start, end, width, height, wwidth, wheight, count, i, j;
+int mark, start, end, wwidth, wheight, count, i, j;
 char** items;
-WINDOW *win, *header, *footer;
+WINDOW *win, *header;
 
-void init_ui() {
+void init_ui(void) {
    initscr();
    cbreak();
    noecho();
    curs_set(0);
-   getmaxyx(stdscr, height, width);
-   wwidth = width;
-   wheight = height - 4;
-   end = count > wheight - 2 ? wheight - 2 : count;
+
+   start_color();
+   use_default_colors();
+   init_pair(RUNNING_PAIR, COLOR_YELLOW, -1);
+   init_pair(STOPPED_PAIR, COLOR_RED, -1);
+   init_pair(COMPLETED_PAIR, COLOR_GREEN, -1);
+
+   mark = start = 0;
 }
 
-void drawui() {
-   mvprintw(0, (width - strlen(HEADER)) / 2, HEADER);
-   mvprintw(height - 1, (width - strlen(FOOTER)) / 2, FOOTER);
-   win = newwin(wheight, wwidth, 2, (width - wwidth) / 2);
+void drawui(void) {
+   wwidth = COLS;
+   wheight = LINES - 4;
+
+   clear();
+
+   int hwidth = strlen(HEADER) + 8;
+   header = newwin(3, hwidth, 0, (COLS - hwidth) / 2);
+   box(header, 0, 0);
+   mvwprintw(header, 1, 4, HEADER);
+
+   mvprintw(LINES - 1, (COLS - strlen(FOOTER)) / 2, FOOTER);
+
+   win = newwin(wheight, wwidth, 3, (COLS - wwidth) / 2);
+
    refresh();
+   wrefresh(header);
 }
 
-void _drawitems() {
+void _drawitems(void) {
+   cmd_t cmd = init_cmd("transmission-remote -l 2> /dev/null");
+
+   items = cmd.outputs;
+   count = cmd.lines;
+   end = count > wheight - 2 ? wheight - 2 : count;
+
    werase(win);
    box(win, 0, 0);
    for (i = 1, j = start; j < end; ++i, ++j) {
-      if (i - 1 == mark) wattron(win, A_REVERSE);
+      if (i - 1 == mark) {
+         wattron(win, A_REVERSE);
+      } else if (strstr(items[j], "   100%")) {
+         wattron(win, COLOR_PAIR(COMPLETED_PAIR));
+      } else if (strstr(items[j], "Stopped")) {
+         wattron(win, COLOR_PAIR(STOPPED_PAIR));
+      } else {
+         wattron(win, COLOR_PAIR(RUNNING_PAIR));
+      }
+
       mvwaddnstr(win, i, 1, items[j], wwidth - 2);
+
       wattroff(win, A_REVERSE);
+      wattroff(win, COLOR_PAIR(COMPLETED_PAIR));
+      wattroff(win, COLOR_PAIR(STOPPED_PAIR));
+      wattroff(win, COLOR_PAIR(RUNNING_PAIR));
    }
 }
 
-void handleinput() {
-   int key;
+void _send_args(char* arg) {
    char cmd[1024];
    char* head = "transmission-remote";
    char* tail = "> /dev/null 2>&1";
+   sprintf(cmd, "%s -t %.10s %s %s", head, items[mark], arg, tail);
+   system(cmd);
+}
+
+void handleinput(void) {
+   int key;
 
    halfdelay(10);
-   while ((key = wgetch(win)) != 'h') {
+   while (1) {
       _drawitems();
+      key = wgetch(win);
       if (key == 'j') {
          if (mark < wheight - 3 && mark < end - 1) {
             ++mark;
@@ -69,18 +111,24 @@ void handleinput() {
             }
          }
       } else if (key == 'l') {
-         sprintf(cmd, "%s -t %.10s -s %s", head, items[mark], tail);
-         system(cmd);
-      } else if (key == 'n') {
-         sprintf(cmd, "%s -t %.10s -S %s", head, items[mark], tail);
-         system(cmd);
+         _send_args("-s");
+      } else if (key == 'h') {
+         _send_args("-S");
+      } else if (key == 'd') {
+         _send_args("-rad");
+         mark = mark > 0 ? mark - 1 : 0;
+      } else if (key == KEY_RESIZE) {
+         drawui();
+      } else if (key == 'q') {
+         break;
       }
    }
 }
 
-void cleanup() {
+void cleanup(void) {
    for (i = 0; i < count; ++i) free(items[i]);
-   delwin(win);
    free(items);
+   delwin(win);
+   delwin(header);
    endwin();
 }
