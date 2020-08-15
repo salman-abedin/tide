@@ -1,7 +1,7 @@
 .POSIX:
 
 NAME    = src/tide
-VERSION = 3.0
+VERSION = 5.0
 
 CC     = cc
 LDLIBS = -lncurses
