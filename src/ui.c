@@ -17,6 +17,7 @@ void init_ui() {
    getmaxyx(stdscr, height, width);
    wwidth = width;
    wheight = height - 4;
+   mark = start = 0;
 }
 
 void drawui() {
@@ -29,7 +30,6 @@ void drawui() {
 void _drawitems() {
    werase(win);
    box(win, 0, 0);
-
 
    cmd_t cmd = init_cmd("transmission-remote -l 2> /dev/null");
    items = cmd.outputs;
@@ -85,7 +85,7 @@ void handleinput() {
       } else if (key == 'd') {
          sprintf(cmd, "%s -t %.10s -rad %s", head, items[mark], tail);
          system(cmd);
-         --mark;
+         mark = mark > 0 ? mark - 1 : 0;
       } else if (key == 'q') {
          break;
       }
