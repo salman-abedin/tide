@@ -6,9 +6,9 @@
 
 int mark, start, end, width, height, wwidth, wheight, count, i, j;
 char** items;
-WINDOW* win;
+WINDOW *win, *header, *footer;
 
-void init(int in_count, char** in_items) {
+void init_ui(int in_count, char** in_items) {
    items = in_items;
    count = in_count;
    initscr();
@@ -16,15 +16,15 @@ void init(int in_count, char** in_items) {
    noecho();
    curs_set(0);
    getmaxyx(stdscr, height, width);
-   wwidth = width / 1.5;
-   wheight = height - 2;
+   wwidth = width;
+   wheight = height - 4;
    end = count > wheight - 2 ? wheight - 2 : count;
 }
 
 void drawui() {
    mvprintw(0, (width - strlen(HEADER)) / 2, HEADER);
    mvprintw(height - 1, (width - strlen(FOOTER)) / 2, FOOTER);
-   win = newwin(wheight, wwidth, 1, (width - wwidth) / 2);
+   win = newwin(wheight, wwidth, 2, (width - wwidth) / 2);
 }
 
 void drawitems() {
@@ -35,7 +35,6 @@ void drawitems() {
       mvwaddnstr(win, i, 1, items[j], wwidth - 2);
       wattroff(win, A_REVERSE);
    }
-   refresh();
 }
 
 void handleinput() {

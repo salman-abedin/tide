@@ -3,7 +3,7 @@
 
 typedef struct {
    int lines;
-   char* output;
+   char** outputs;
 } cmd_t;
 
 cmd_t init_cmd(char* path);
