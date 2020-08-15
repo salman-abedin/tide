@@ -3,7 +3,7 @@
  * minimal CLI URL launcher
  */
 
-#include "cmd.h"
+#include "stdlib.h"
 #include "ui.h"
 #include "unistd.h"
 
@@ -12,8 +12,7 @@ int main(void) {
       system("transmission-daemon");
       sleep(3);
    }
-   cmd_t cmd = init_cmd("transmission-remote -l");
-   init_ui(cmd.lines, cmd.outputs);
+   init_ui();
    drawui();
    drawitems();
    handleinput();

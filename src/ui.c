@@ -8,9 +8,7 @@ int mark, start, end, width, height, wwidth, wheight, count, i, j;
 char** items;
 WINDOW *win, *header, *footer;
 
-void init_ui(int in_count, char** in_items) {
-   items = in_items;
-   count = in_count;
+void init_ui() {
    initscr();
    cbreak();
    noecho();
@@ -28,7 +26,7 @@ void drawui() {
    refresh();
 }
 
-void drawitems() {
+void _drawitems() {
    werase(win);
    box(win, 0, 0);
    for (i = 1, j = start; j < end; ++i, ++j) {
@@ -40,9 +38,13 @@ void drawitems() {
 
 void handleinput() {
    int key;
-   char* cmd;
-   char* cmdhead = "$BROWSER";
+   char cmd[1024];
+   char* head = "transmission-remote";
+   char* tail = "> /dev/null 2>&1";
+
+   halfdelay(10);
    while ((key = wgetch(win)) != 'h') {
+      _drawitems();
       if (key == 'j') {
          if (mark < wheight - 3 && mark < end - 1) {
             ++mark;
@@ -53,7 +55,6 @@ void handleinput() {
             end = count > wheight - 2 ? wheight - 2 : count;
             start = mark = 0;
          }
-         drawitems();
       } else if (key == 'k') {
          if (mark == 0 && start > 0) {
             --end;
@@ -67,10 +68,11 @@ void handleinput() {
                start = count > wheight - 2 ? count - wheight + 2 : 0;
             }
          }
-         drawitems();
       } else if (key == 'l') {
-         cmd = calloc(strlen(cmdhead) + strlen(items[mark]) + 2, (sizeof *cmd));
-         sprintf(cmd, "%s %s", cmdhead, items[mark]);
+         sprintf(cmd, "%s -t %.10s -s %s", head, items[mark], tail);
+         system(cmd);
+      } else if (key == 'n') {
+         sprintf(cmd, "%s -t %.10s -S %s", head, items[mark], tail);
          system(cmd);
       }
    }
