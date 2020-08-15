@@ -3,7 +3,7 @@
 # tide: A minimal Transmission CLI client
 
 tide is a minimal TUI for the BitTorrent client [Transmission](https://transmissionbt.com/).  
-tide is the successor to [puri.sh](https://github.com/salman-abedin/tide.sh)
+tide is the successor to [tide.sh](https://github.com/salman-abedin/tide.sh)
 
 ## Features
 
@@ -14,8 +14,7 @@ tide is the successor to [puri.sh](https://github.com/salman-abedin/tide.sh)
 
 ## Libraries
 
-- ncurses
-
+-  ncurses
 
 ## Installation
 
@@ -29,9 +28,13 @@ git clone https://github.com/salman-abedin/tide.git && cd tide && sudo make inst
 sudo make uninstall
 ```
 
+## Patches
+
+-  **27/07/20**:- Added scrolling support
+-  **15/08/20**:- Rewrote the shellscript in C
+
 ## TODOs
 
--  Scrolling
 -  Marking
 -  Magnet Adding
 
