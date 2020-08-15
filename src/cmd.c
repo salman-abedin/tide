@@ -1,14 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "cmd.h"
 
 void verify_running() {
    if (system("pidof transmission-daemon > /dev/null") != 0) {
       system("transmission-daemon");
-      sleep(3);
    }
 }
 

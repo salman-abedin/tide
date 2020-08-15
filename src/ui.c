@@ -30,7 +30,8 @@ void _drawitems() {
    werase(win);
    box(win, 0, 0);
 
-   cmd_t cmd = init_cmd("transmission-remote -l");
+
+   cmd_t cmd = init_cmd("transmission-remote -l 2> /dev/null");
    items = cmd.outputs;
    count = cmd.lines;
    end = count > wheight - 2 ? wheight - 2 : count;
