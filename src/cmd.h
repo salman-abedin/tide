@@ -6,6 +6,6 @@ typedef struct {
    char* output;
 } cmd_t;
 
-cmd_t get_cmd_output(char* path);
+cmd_t init_cmd(char* path);
 
 #endif

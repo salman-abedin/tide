@@ -3,22 +3,28 @@
 
 #include "cmd.h"
 
-cmd_t get_cmd_output(char* cmd_str) {
+cmd_t init_cmd(char* cmd_str) {
+   int lines, letters, capacity, writei;
    char letter;
-   int lines, writei;
-   cmd_t cmd;
    FILE* pipe;
+   cmd_t cmd;
 
+   lines = letters = writei = 0;
+   capacity = 1024;
+
+   cmd.output = calloc(capacity, sizeof(char));
    pipe = popen(cmd_str, "r");
-   fseek(pipe, 0L, SEEK_END);
-   cmd.output = malloc(ftell(pipe));
 
-   fseek(pipe, 0L, SEEK_SET);
    while ((letter = fgetc(pipe)) != EOF) {
       if (letter == '\n') ++lines;
+      if (++letters == capacity) {
+         capacity *= 2;
+         cmd.output = realloc(cmd.output, sizeof(char) * capacity);
+      }
       cmd.output[writei++] = letter;
    }
-   cmd.lines = lines;
    pclose(pipe);
+
+   cmd.lines = lines;
    return cmd;
 }
