@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "cmd.h"
+#include "slib.h"
 #include "ui.h"
 
 int mark, start, end, width, height, wwidth, wheight, count, i, j;
