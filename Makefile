@@ -1,7 +1,7 @@
 include config.mk
 
-OBJ = $(SRC:.c=.o)
 SRC = $(wildcard src/*.c)
+OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 $(NAME): $(OBJ)
@@ -13,4 +13,5 @@ install: all
 uninstall:
 	@rm -f "$(DESTDIR)$(BINPREFIX)/$(NAME)"
 	@echo Done removing the binary from ${DESTDIR}${BINPREFIX}
+
 .PHONY: all install uninstall
