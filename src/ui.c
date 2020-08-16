@@ -13,6 +13,13 @@ WINDOW* win;
 
 char logs[1034];
 
+void _resize() {
+   RUN(1, "ns changed");
+   /* resize_term(height, width); */
+   /* sprintf(logs, "ns %d", width); */
+   /* system(logs); */
+}
+
 void init_ui() {
    initscr();
    cbreak();
@@ -23,7 +30,7 @@ void init_ui() {
    wwidth = width;
    wheight = height - 2;
 
-   signal(SIGWINCH, drawui);
+   signal(SIGWINCH, _resize);
 
    start_color();
    use_default_colors();
@@ -35,10 +42,6 @@ void init_ui() {
 }
 
 void drawui() {
-   /* resize_term(height, width); */
-   /* sprintf(logs, "ns %d", width); */
-   /* system(logs); */
-
    /* attron(A_DIM); */
    mvprintw(0, (width - strlen(HEADER)) / 2, HEADER);
    mvprintw(height - 1, (width - strlen(FOOTER)) / 2, FOOTER);
