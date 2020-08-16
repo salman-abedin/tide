@@ -76,11 +76,16 @@ void _drawitems() {
    }
 }
 
-void handleinput() {
-   int key;
+void _send_args(char* arg) {
+   char cmd[1024];
    char* head = "transmission-remote";
    char* tail = "> /dev/null 2>&1";
-   char cmd[1024];
+   sprintf(cmd, "%s -t %.10s %s %s", head, items[mark], arg, tail);
+   system(cmd);
+}
+
+void handleinput() {
+   int key;
 
    halfdelay(10);
    while (1) {
@@ -110,14 +115,11 @@ void handleinput() {
             }
          }
       } else if (key == 'l') {
-         sprintf(cmd, "%s -t %.10s -s %s", head, items[mark], tail);
-         system(cmd);
+         _send_args("-s");
       } else if (key == 'h') {
-         sprintf(cmd, "%s -t %.10s -S %s", head, items[mark], tail);
-         system(cmd);
+         _send_args("-S");
       } else if (key == 'd') {
-         sprintf(cmd, "%s -t %.10s -rad %s", head, items[mark], tail);
-         system(cmd);
+         _send_args("-rad");
          mark = mark > 0 ? mark - 1 : 0;
       } else if (key == 'q') {
          break;
