@@ -8,7 +8,7 @@
 
 int mark, start, end, width, height, wwidth, wheight, count, i, j;
 char** items;
-WINDOW *win, *header, *footer;
+WINDOW* win;
 
 char logs[1034];
 
@@ -18,7 +18,10 @@ void init_ui() {
    noecho();
    curs_set(0);
 
-   /* signal(SIGWINCH, resize_term(height, width)); */
+   getmaxyx(stdscr, height, width);
+   wwidth = width;
+   wheight = height - 2;
+
    signal(SIGWINCH, drawui);
 
    start_color();
@@ -31,14 +34,9 @@ void init_ui() {
 }
 
 void drawui() {
-   resize_term(height, width);
-   getmaxyx(stdscr, height, width);
-
-   wwidth = width;
-   wheight = height - 2;
-
-   sprintf(logs, "ns %d", width);
-   system(logs);
+   /* resize_term(height, width); */
+   /* sprintf(logs, "ns %d", width); */
+   /* system(logs); */
 
    /* attron(A_DIM); */
    mvprintw(0, (width - strlen(HEADER)) / 2, HEADER);
@@ -49,14 +47,15 @@ void drawui() {
 }
 
 void _drawitems() {
-   werase(win);
-   box(win, 0, 0);
+   cmd_t cmd;
 
-   cmd_t cmd = init_cmd("transmission-remote -l 2> /dev/null");
+   cmd = init_cmd("transmission-remote -l 2> /dev/null");
    items = cmd.outputs;
    count = cmd.lines;
    end = count > wheight - 2 ? wheight - 2 : count;
 
+   werase(win);
+   box(win, 0, 0);
    for (i = 1, j = start; j < end; ++i, ++j) {
       if (i - 1 == mark) {
          wattron(win, A_REVERSE);
@@ -75,14 +74,13 @@ void _drawitems() {
       wattroff(win, COLOR_PAIR(STOPPED_PAIR));
       wattroff(win, COLOR_PAIR(RUNNING_PAIR));
    }
-   /* resize_term(height, width); */
 }
 
 void handleinput() {
    int key;
-   char cmd[1024];
    char* head = "transmission-remote";
    char* tail = "> /dev/null 2>&1";
+   char cmd[1024];
 
    halfdelay(10);
    while (1) {
