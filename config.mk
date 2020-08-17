@@ -8,5 +8,5 @@ CC     = cc
 CFLAGS = -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -pedantic -O2
 
 NAME    = src/tide
-VERSION = 5.0
+VERSION = 7.0
 LDLIBS = -s -lncurses
