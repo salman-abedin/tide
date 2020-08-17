@@ -27,6 +27,7 @@ cmd_t init_cmd(char* cmd_str) {
    while (fgets(line, sizeof line, pipe)) {
       ++lines;
       if (lines == 1) continue;
+      line[strcspn(line, "\n")] = 0;  // Remove newlines
       strcpy(cmd.outputs[lines - 2], line);
       if (lines - 2 == capacity) {
          capacity *= 2;
