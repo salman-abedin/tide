@@ -25,7 +25,7 @@ git clone https://github.com/salman-abedin/tide.git && cd tide && sudo make inst
 
 ## FAQ
 
-### How are you grabbing the magnet link?
+### How are you sending the magnet link to the server?
 
 Using **xdg-open** (shamefully).  
 Here is my setup.  
