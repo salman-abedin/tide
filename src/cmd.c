@@ -4,10 +4,9 @@
 
 #include "cmd.h"
 
-void verify_running() {
-   if (system("pidof transmission-daemon > /dev/null") != 0) {
+void _verify_running() {
+   if (system("pidof transmission-daemon > /dev/null 2>&1") != 0)
       system("transmission-daemon");
-   }
 }
 
 cmd_t init_cmd(char* cmd_str) {
@@ -21,7 +20,7 @@ cmd_t init_cmd(char* cmd_str) {
    for (i = 0; i < capacity; ++i)
       cmd.outputs[i] = calloc(sizeof(line), sizeof(char));
 
-   verify_running();
+   _verify_running();
    pipe = popen(cmd_str, "r");
 
    lines = 0;
@@ -36,7 +35,8 @@ cmd_t init_cmd(char* cmd_str) {
             cmd.outputs[i] = calloc(sizeof(line), sizeof(char));
       }
    }
-   pclose(pipe);
    cmd.lines = lines - 2;
+   pclose(pipe);
+
    return cmd;
 }

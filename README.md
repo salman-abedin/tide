@@ -7,6 +7,7 @@ tide is the successor to [tide.sh](https://github.com/salman-abedin/tide.sh)
 
 ## Features
 
+-  Tiny & Fast
 -  Vim bindings
 -  Stopping torrents
 -  Starting torrents
@@ -35,6 +36,7 @@ sudo make uninstall
 
 ## TODOs
 
+-  Delete Confirmation
 -  Marking
 -  Magnet Adding
 
