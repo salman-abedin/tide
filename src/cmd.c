@@ -18,21 +18,22 @@ cmd_t init_cmd(char* cmd_str) {
    capacity = 50;
    cmd.outputs = calloc(capacity, sizeof(char*));
    for (i = 0; i < capacity; ++i)
-      cmd.outputs[i] = calloc(sizeof(line), sizeof(char));
+      cmd.outputs[i] = calloc(sizeof line, sizeof(char));
 
    _verify_running();
    pipe = popen(cmd_str, "r");
 
    lines = 0;
-   while (fgets(line, 1024, pipe)) {
+   while (fgets(line, sizeof line, pipe)) {
       ++lines;
       if (lines == 1) continue;
+      line[strcspn(line, "\n")] = 0;
       strcpy(cmd.outputs[lines - 2], line);
       if (lines - 2 == capacity) {
          capacity *= 2;
          cmd.outputs = realloc(cmd.outputs, sizeof(char*) * capacity);
          for (i = 0; i < capacity; ++i)
-            cmd.outputs[i] = calloc(sizeof(line), sizeof(char));
+            cmd.outputs[i] = calloc(sizeof line, sizeof(char));
       }
    }
    cmd.lines = lines - 2;
