@@ -9,7 +9,8 @@ int mark, start, end, wwidth, wheight, count, i, j;
 char** items;
 WINDOW *win, *header;
 
-void init_ui(void) {
+void init_ui(void)
+{
    initscr();
    cbreak();
    noecho();
@@ -24,7 +25,8 @@ void init_ui(void) {
    mark = start = 0;
 }
 
-void draw_ui(void) {
+void draw_ui(void)
+{
    wwidth = COLS;
    wheight = LINES - 4;
 
@@ -43,7 +45,8 @@ void draw_ui(void) {
    wrefresh(header);
 }
 
-void _drawitems(void) {
+void _drawitems(void)
+{
    cmd_t cmd = init_cmd("transmission-remote -l 2> /dev/null");
 
    items = cmd.outputs;
@@ -53,15 +56,14 @@ void _drawitems(void) {
    werase(win);
    box(win, 0, 0);
    for (i = 1, j = start; j < end; ++i, ++j) {
-      if (i - 1 == mark) {
+      if (i - 1 == mark)
          wattron(win, A_REVERSE);
-      } else if (strstr(items[j], "   100%")) {
+      else if (strstr(items[j], "   100%"))
          wattron(win, COLOR_PAIR(COMPLETED_PAIR));
-      } else if (strstr(items[j], "Stopped")) {
+      else if (strstr(items[j], "Stopped"))
          wattron(win, COLOR_PAIR(STOPPED_PAIR));
-      } else {
+      else
          wattron(win, COLOR_PAIR(RUNNING_PAIR));
-      }
 
       mvwaddnstr(win, i, 1, items[j], wwidth - 2);
 
@@ -72,15 +74,20 @@ void _drawitems(void) {
    }
 }
 
-void _send_args(char* arg) {
-   char cmd[1024];
-   char* head = "transmission-remote";
-   char* tail = "> /dev/null 2>&1";
-   sprintf(cmd, "%s -t %.10s %s %s", head, items[mark], arg, tail);
+void _send_args(char* arg)
+{
+   char cmd[256];
+   sprintf(cmd,
+       "%s -t %.10s %s %s",
+       "transmission-remote",
+       items[mark],
+       arg,
+       "> /dev/null 2>&1");
    system(cmd);
 }
 
-void handle_input(void) {
+void handle_input(void)
+{
    int key;
 
    halfdelay(10);
@@ -125,8 +132,10 @@ void handle_input(void) {
    }
 }
 
-void housekeep(void) {
-   for (i = 0; i < count; ++i) free(items[i]);
+void housekeep(void)
+{
+   for (i = 0; i < count; ++i)
+      free(items[i]);
    free(items);
    delwin(win);
    delwin(header);

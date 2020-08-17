@@ -5,7 +5,8 @@
 
 #include "ui.h"
 
-int main(void) {
+int main(void)
+{
    init_ui();
    draw_ui();
    handle_input();

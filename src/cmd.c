@@ -4,13 +4,14 @@
 
 #include "cmd.h"
 
-void verify_running() {
-   if (system("pidof transmission-daemon > /dev/null") != 0) {
+void verify_running()
+{
+   if (system("pidof transmission-daemon > /dev/null") != 0)
       system("transmission-daemon");
-   }
 }
 
-cmd_t init_cmd(char* cmd_str) {
+cmd_t init_cmd(char* cmd_str)
+{
    int lines, capacity, i;
    char line[1024];
    FILE* pipe;
@@ -27,7 +28,8 @@ cmd_t init_cmd(char* cmd_str) {
    lines = 0;
    while (fgets(line, 1024, pipe)) {
       ++lines;
-      if (lines == 1) continue;
+      if (lines == 1)
+         continue;
       strcpy(cmd.outputs[lines - 2], line);
       if (lines - 2 == capacity) {
          capacity *= 2;
