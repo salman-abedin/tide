@@ -24,7 +24,7 @@ cmd_t init_cmd(char* cmd_str) {
    pipe = popen(cmd_str, "r");
 
    lines = 0;
-   while (fgets(line, 1024, pipe)) {
+   while (fgets(line, sizeof line, pipe)) {
       ++lines;
       if (lines == 1) continue;
       strcpy(cmd.outputs[lines - 2], line);
