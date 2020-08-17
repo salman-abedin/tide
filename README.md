@@ -25,7 +25,7 @@ git clone https://github.com/salman-abedin/tide.git && cd tide && sudo make inst
 
 ## FAQ
 
-#### How are you grabbing the magnet links?
+#### How are you grabbing the magnet link?
 
 Using **xdg-open** (shamefully).  
 Here is my setup.  
