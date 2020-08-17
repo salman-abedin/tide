@@ -36,6 +36,7 @@ sudo make uninstall
 
 ## TODOs
 
+-  Delete Confirmation
 -  Marking
 -  Magnet Adding
 
