@@ -7,7 +7,7 @@
 
 int mark, start, end, wwidth, wheight, count, i, j;
 char** items;
-WINDOW* win;
+WINDOW *win, *header;
 
 void init_ui(void) {
    initscr();
@@ -25,16 +25,22 @@ void init_ui(void) {
 }
 
 void drawui(void) {
-   /* attron(A_DIM); */
+   wwidth = COLS;
+   wheight = LINES - 4;
+
    clear();
-   mvprintw(0, (COLS - strlen(HEADER)) / 2, HEADER);
+
+   int hwidth = strlen(HEADER) + 8;
+   header = newwin(3, hwidth, 0, (COLS - hwidth) / 2);
+   box(header, 0, 0);
+   mvwprintw(header, 1, 4, HEADER);
+
    mvprintw(LINES - 1, (COLS - strlen(FOOTER)) / 2, FOOTER);
 
-   wwidth = COLS;
-   wheight = LINES - 2;
-   win = newwin(wheight, wwidth, 1, (COLS - wwidth) / 2);
+   win = newwin(wheight, wwidth, 3, (COLS - wwidth) / 2);
+
    refresh();
-   /* attroff(A_DIM); */
+   wrefresh(header);
 }
 
 void _drawitems(void) {
@@ -51,7 +57,7 @@ void _drawitems(void) {
          wattron(win, A_REVERSE);
       } else if (strstr(items[j], "   100%")) {
          wattron(win, COLOR_PAIR(COMPLETED_PAIR));
-      } else if (strstr(items[j], "   Stopped")) {
+      } else if (strstr(items[j], "Stopped")) {
          wattron(win, COLOR_PAIR(STOPPED_PAIR));
       } else {
          wattron(win, COLOR_PAIR(RUNNING_PAIR));
@@ -123,5 +129,6 @@ void cleanup(void) {
    for (i = 0; i < count; ++i) free(items[i]);
    free(items);
    delwin(win);
+   delwin(header);
    endwin();
 }
