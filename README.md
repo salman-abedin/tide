@@ -23,6 +23,17 @@ tide is the successor to [tide.sh](https://github.com/salman-abedin/tide.sh)
 git clone https://github.com/salman-abedin/tide.git && cd tide && sudo make install
 ```
 
+## FAQ
+
+#### How are you grabbing the magnet links?
+
+Using **xdg-open** (shamefully).  
+Here is my setup.  
+
+https://github.com/salman-abedin/magpie/blob/master/.config/mimeapps.list  
+https://github.com/salman-abedin/magpie/blob/master/.local/share/applications/transmission.desktop  
+https://github.com/salman-abedin/alfred/blob/master/src/torrent.sh
+
 ## Uninstallation
 
 ```sh
