@@ -7,8 +7,8 @@
 
 int main(void) {
    init_ui();
-   drawui();
-   handleinput();
-   cleanup();
+   draw_ui();
+   handle_input();
+   housekeep();
    return 0;
 }

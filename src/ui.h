@@ -9,8 +9,8 @@
 #define COMPLETED_PAIR 3
 
 void init_ui(void);
-void drawui(void);
-void handleinput(void);
-void cleanup(void);
+void draw_ui(void);
+void handle_input(void);
+void housekeep(void);
 
 #endif

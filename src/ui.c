@@ -24,7 +24,7 @@ void init_ui(void) {
    mark = start = 0;
 }
 
-void drawui(void) {
+void draw_ui(void) {
    wwidth = COLS;
    wheight = LINES - 4;
 
@@ -80,7 +80,7 @@ void _send_args(char* arg) {
    system(cmd);
 }
 
-void handleinput(void) {
+void handle_input(void) {
    int key;
 
    halfdelay(10);
@@ -118,14 +118,14 @@ void handleinput(void) {
          _send_args("-rad");
          mark = mark > 0 ? mark - 1 : 0;
       } else if (key == KEY_RESIZE) {
-         drawui();
+         draw_ui();
       } else if (key == 'q') {
          break;
       }
    }
 }
 
-void cleanup(void) {
+void housekeep(void) {
    for (i = 0; i < count; ++i) free(items[i]);
    free(items);
    delwin(win);
