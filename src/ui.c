@@ -14,7 +14,8 @@ WINDOW* win;
 char logs[1034];
 
 void _resize() {
-   RUN(1, "ns changed");
+   run(1, "ns resize 2> /dev/null");
+
    /* resize_term(height, width); */
    /* sprintf(logs, "ns %d", width); */
    /* system(logs); */
@@ -51,9 +52,8 @@ void drawui() {
 }
 
 void _drawitems() {
-   cmd_t cmd;
+   cmd_t cmd = init_cmd("transmission-remote -l 2> /dev/null");
 
-   cmd = init_cmd("transmission-remote -l 2> /dev/null");
    items = cmd.outputs;
    count = cmd.lines;
    end = count > wheight - 2 ? wheight - 2 : count;
