@@ -1,37 +1,19 @@
 #include <ncurses.h>
-#include <signal.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "cmd.h"
-#include "slib.h"
 #include "ui.h"
 
-int mark, start, end, width, height, wwidth, wheight, count, i, j;
+int mark, start, end, wwidth, wheight, count, i, j;
 char** items;
 WINDOW* win;
 
-char logs[1034];
-
-void _resize() {
-   run(1, "ns resize 2> /dev/null");
-
-   /* resize_term(height, width); */
-   /* sprintf(logs, "ns %d", width); */
-   /* system(logs); */
-}
-
-void init_ui() {
+void init_ui(void) {
    initscr();
    cbreak();
    noecho();
    curs_set(0);
-
-   getmaxyx(stdscr, height, width);
-   wwidth = width;
-   wheight = height - 2;
-
-   signal(SIGWINCH, _resize);
 
    start_color();
    use_default_colors();
@@ -42,16 +24,20 @@ void init_ui() {
    mark = start = 0;
 }
 
-void drawui() {
+void drawui(void) {
    /* attron(A_DIM); */
-   mvprintw(0, (width - strlen(HEADER)) / 2, HEADER);
-   mvprintw(height - 1, (width - strlen(FOOTER)) / 2, FOOTER);
-   win = newwin(wheight, wwidth, 1, (width - wwidth) / 2);
+   clear();
+   mvprintw(0, (COLS - strlen(HEADER)) / 2, HEADER);
+   mvprintw(LINES - 1, (COLS - strlen(FOOTER)) / 2, FOOTER);
+
+   wwidth = COLS;
+   wheight = LINES - 2;
+   win = newwin(wheight, wwidth, 1, (COLS - wwidth) / 2);
    refresh();
    /* attroff(A_DIM); */
 }
 
-void _drawitems() {
+void _drawitems(void) {
    cmd_t cmd = init_cmd("transmission-remote -l 2> /dev/null");
 
    items = cmd.outputs;
@@ -88,7 +74,7 @@ void _send_args(char* arg) {
    system(cmd);
 }
 
-void handleinput() {
+void handleinput(void) {
    int key;
 
    halfdelay(10);
@@ -125,15 +111,17 @@ void handleinput() {
       } else if (key == 'd') {
          _send_args("-rad");
          mark = mark > 0 ? mark - 1 : 0;
+      } else if (key == KEY_RESIZE) {
+         drawui();
       } else if (key == 'q') {
          break;
       }
    }
 }
 
-void cleanup() {
+void cleanup(void) {
    for (i = 0; i < count; ++i) free(items[i]);
-   delwin(win);
    free(items);
+   delwin(win);
    endwin();
 }
