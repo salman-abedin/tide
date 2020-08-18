@@ -18,7 +18,7 @@ cmd_t init_cmd(char* cmd_str) {
    capacity = 50;
    cmd.outputs = calloc(capacity, sizeof(char*));
    for (i = 0; i < capacity; ++i)
-      cmd.outputs[i] = calloc(sizeof(line), sizeof(char));
+      cmd.outputs[i] = calloc(sizeof line, sizeof(char));
 
    _verify_running();
    pipe = popen(cmd_str, "r");
@@ -33,7 +33,7 @@ cmd_t init_cmd(char* cmd_str) {
          capacity *= 2;
          cmd.outputs = realloc(cmd.outputs, sizeof(char*) * capacity);
          for (i = 0; i < capacity; ++i)
-            cmd.outputs[i] = calloc(sizeof(line), sizeof(char));
+            cmd.outputs[i] = calloc(sizeof line, sizeof(char));
       }
    }
    cmd.lines = lines - 2;
