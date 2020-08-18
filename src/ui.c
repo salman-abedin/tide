@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../config.h"
 #include "cmd.h"
 #include "ui.h"
 
 int mark, start, end, wwidth, wheight, count, i, j;
 char** items;
 WINDOW *win, *header;
+char server_prefix[256] = {0};
 
 void init_ui(void) {
    initscr();
@@ -22,6 +24,9 @@ void init_ui(void) {
    init_pair(COMPLETED_PAIR, COLOR_GREEN, -1);
 
    mark = start = 0;
+
+   if (LEN(server) > 1)
+      sprintf(server_prefix, "ssh -p %s %s", server[1], server[0]);
 }
 
 void draw_ui(void) {
@@ -44,7 +49,10 @@ void draw_ui(void) {
 }
 
 void _drawitems(void) {
-   cmd_t cmd = init_cmd("transmission-remote -l 2> /dev/null");
+   char cmd_str[1024];
+   sprintf(cmd_str, "%s %s", server_prefix,
+           "transmission-remote -l 2> /dev/null");
+   cmd_t cmd = init_cmd(cmd_str);
 
    items = cmd.outputs;
    count = cmd.lines;
@@ -72,9 +80,9 @@ void _drawitems(void) {
 }
 
 void _send_args(char* arg) {
-   char cmd[256];
-   sprintf(cmd, "%s -t %.10s %s %s", "transmission-remote", items[mark], arg,
-           "> /dev/null 2>&1");
+   char cmd[1024];
+   sprintf(cmd, "%s transmission-remote -t %.10s %s > /dev/null 2>&1",
+           server_prefix, items[mark], arg);
    system(cmd);
 }
 
