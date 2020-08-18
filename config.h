@@ -1,5 +1,5 @@
 static char* server[] = {
-    /* "", /1* empty for using local daemon *1/ */
-    "192.168.0.101", /* address */
-    "8022",          /* port */
+    "192.168.0.101", /* remote address */
+    "8022",          /* remote port */
+    "local",         /* uncomment for local usage */
 };
