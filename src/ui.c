@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../config.h"
 #include "cmd.h"
 #include "ui.h"
 
-int mark, start, end, wwidth, wheight, count, i, j;
+int mark, start, end, wheight, count, i, j;
 char** items;
-WINDOW *win, *header;
+WINDOW *win, *banner, *summary, *header;
+char server_prefix[256] = {0};
 
 void init_ui(void) {
    initscr();
@@ -22,32 +24,43 @@ void init_ui(void) {
    init_pair(COMPLETED_PAIR, COLOR_GREEN, -1);
 
    mark = start = 0;
+
+   if (REMOTE_USE == 1)
+      sprintf(server_prefix, "ssh -p %s %s@%s", REMOTE_PORT, REMOTE_USER,
+              REMOTE_IP);
 }
 
 void draw_ui(void) {
-   wwidth = COLS;
-   wheight = LINES - 4;
-
    clear();
 
-   int hwidth = strlen(HEADER) + 8;
-   header = newwin(3, hwidth, 0, (COLS - hwidth) / 2);
-   box(header, 0, 0);
-   mvwprintw(header, 1, 4, HEADER);
+   int banner_width = strlen(BANNER) + 8;
+   banner = newwin(3, banner_width, 0, (COLS - banner_width) / 2);
+   box(banner, 0, 0);
+   mvwprintw(banner, 1, 4, BANNER);
 
-   mvprintw(LINES - 1, (COLS - strlen(FOOTER)) / 2, FOOTER);
+   header = newwin(3, COLS, 3, 0);
+   /* box(header, 0, 0); */
+   wborder(header, 0, 0, 0, 1, 0, 0, 1, 1);
+   mvwprintw(header, 1, 1, HEADER);
 
-   win = newwin(wheight, wwidth, 3, (COLS - wwidth) / 2);
+   mvprintw(LINES - 1, (COLS - strlen(BINDINGS)) / 2, BINDINGS);
+
+   wheight = LINES - 7;
+   win = newwin(wheight, COLS, 6, 0);
 
    refresh();
+   wrefresh(banner);
    wrefresh(header);
 }
 
 void _drawitems(void) {
-   cmd_t cmd = init_cmd("transmission-remote -l 2> /dev/null");
+   char cmd_str[1024];
+   sprintf(cmd_str, "%s %s", server_prefix,
+           "transmission-remote -l 2> /dev/null");
+   cmd_t cmd = init_cmd(cmd_str);
 
-   items = cmd.outputs;
-   count = cmd.lines;
+   items = ++cmd.outputs;
+   count = cmd.lines - 2;
    end = count > wheight - 2 ? wheight - 2 : count;
 
    werase(win);
@@ -62,7 +75,7 @@ void _drawitems(void) {
       else
          wattron(win, COLOR_PAIR(RUNNING_PAIR));
 
-      mvwaddnstr(win, i, 1, items[j], wwidth - 2);
+      mvwaddnstr(win, i, 1, items[j], COLS - 2);
 
       wattroff(win, A_REVERSE);
       wattroff(win, COLOR_PAIR(COMPLETED_PAIR));
@@ -72,9 +85,9 @@ void _drawitems(void) {
 }
 
 void _send_args(char* arg) {
-   char cmd[256];
-   sprintf(cmd, "%s -t %.10s %s %s", "transmission-remote", items[mark], arg,
-           "> /dev/null 2>&1");
+   char cmd[1024];
+   sprintf(cmd, "%s transmission-remote -t %.10s %s > /dev/null 2>&1",
+           server_prefix, items[mark], arg);
    system(cmd);
 }
 
@@ -124,9 +137,7 @@ void handle_input(void) {
 }
 
 void housekeep(void) {
-   for (i = 0; i < count; ++i) free(items[i]);
-   free(items);
    delwin(win);
-   delwin(header);
+   delwin(banner);
    endwin();
 }

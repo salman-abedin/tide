@@ -12,10 +12,15 @@ tide is the successor to [tide.sh](https://github.com/salman-abedin/tide.sh)
 -  Stopping torrents
 -  Starting torrents
 -  Deleting torrents (Including Files)
+-  Remote access (consult **config.h**)
 
 ## Libraries
 
 -  ncurses
+
+## Dependencies
+
+-  **ssh** (for remote usage)
 
 ## Installation
 
