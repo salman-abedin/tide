@@ -8,8 +8,6 @@
 #define STOPPED_PAIR 2
 #define COMPLETED_PAIR 3
 
-#define LEN(arr) ((int)(sizeof(arr) / sizeof(arr)[0]))
-
 void init_ui(void);
 void draw_ui(void);
 void handle_input(void);

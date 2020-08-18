@@ -18,6 +18,10 @@ tide is the successor to [tide.sh](https://github.com/salman-abedin/tide.sh)
 
 -  ncurses
 
+## Dependencies
+
+-  **ssh** (for remote usage)
+
 ## Installation
 
 ```sh

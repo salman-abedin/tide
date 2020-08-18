@@ -1,5 +1,3 @@
-static char* server[] = {
-    /* comment out any one(but not both) of these for local usage */
-    "192.168.0.101", /* remote address */
-    /* "8022",          /1* remote port *1/ */
-};
+#define REMOTE_USE 0 /* set this 1 for remote usage */
+#define REMOTE_IP "192.168.0.101"
+#define REMOTE_PORT "8080"
