@@ -25,7 +25,7 @@ void init_ui(void) {
 
    mark = start = 0;
 
-   if (LEN(server) < 3)
+   if (LEN(server) == 2)
       sprintf(server_prefix, "ssh -p %s %s", server[1], server[0]);
 }
 
