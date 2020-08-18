@@ -12,7 +12,7 @@ tide is the successor to [tide.sh](https://github.com/salman-abedin/tide.sh)
 -  Stopping torrents
 -  Starting torrents
 -  Deleting torrents (Including Files)
--  Remote Daemon Access (consult **config.h**)
+-  Remote access (consult **config.h**)
 
 ## Libraries
 
