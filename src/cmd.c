@@ -2,9 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* #include "../config.h" */
 #include "cmd.h"
 
 void _verify_running() {
+   /* char cmd_str[1024]; */
+   /* sprintf(cmd_str, "%s %s", server_prefix, */
+   /* "transmission-remote -l 2> /dev/null"); */
    if (system("pidof transmission-daemon > /dev/null 2>&1") != 0)
       system("transmission-daemon");
 }
