@@ -57,7 +57,7 @@ void _drawitems(void) {
          wattron(win, A_REVERSE);
       else if (strstr(items[j], "   100%"))
          wattron(win, COLOR_PAIR(COMPLETED_PAIR));
-      else if (strstr(items[j], "Stopped"))
+      else if (strstr(items[j], "  Stopped"))
          wattron(win, COLOR_PAIR(STOPPED_PAIR));
       else
          wattron(win, COLOR_PAIR(RUNNING_PAIR));
