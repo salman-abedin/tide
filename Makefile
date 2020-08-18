@@ -1,6 +1,6 @@
 include config.mk
 
-all: $(NAME)
+all: $(NAME) config.h
 $(NAME): $(OBJ)
 install: all
 	@mkdir -p $(BIN_DIR)
