@@ -8,7 +8,7 @@
 
 int mark, start, end, wheight, count, i, j;
 char** items;
-WINDOW *win, *banner, *summary, *header;
+WINDOW *win, *banner, *header, *footer;
 char server_prefix[256] = {0};
 
 void init_ui(void) {
@@ -39,14 +39,16 @@ void draw_ui(void) {
    mvwprintw(banner, 1, 4, BANNER);
 
    header = newwin(3, COLS, 3, 0);
-   /* box(header, 0, 0); */
-   wborder(header, 0, 0, 0, 1, 0, 0, 1, 1);
+   box(header, 0, 0);
    mvwprintw(header, 1, 1, HEADER);
 
    mvprintw(LINES - 1, (COLS - strlen(BINDINGS)) / 2, BINDINGS);
 
-   wheight = LINES - 7;
-   win = newwin(wheight, COLS, 6, 0);
+   wheight = LINES - 8;
+   win = newwin(wheight, COLS, 5, 0);
+
+   footer = newwin(3, COLS, LINES - 4, 0);
+   box(footer, 0, 0);
 
    refresh();
    wrefresh(banner);
@@ -82,6 +84,9 @@ void _drawitems(void) {
       wattroff(win, COLOR_PAIR(STOPPED_PAIR));
       wattroff(win, COLOR_PAIR(RUNNING_PAIR));
    }
+
+   mvwprintw(footer, 1, 1, items[count]);
+   wrefresh(footer);
 }
 
 void _send_args(char* arg) {
