@@ -7,9 +7,10 @@
 #include "ui.h"
 
 int mark, start, end, wheight, count, i, j;
+char server_prefix[64] = {0};
+char bindings[64] = {0};
 char** items;
 WINDOW *win, *banner, *header, *footer;
-char server_prefix[256] = {0};
 
 void init_ui(void) {
    initscr();
@@ -33,7 +34,9 @@ void init_ui(void) {
 void draw_ui(void) {
    clear();
 
-   mvprintw(LINES - 1, (COLS - strlen(BINDINGS)) / 2, BINDINGS);
+   sprintf(bindings, "Up:%c   Down:%c   Stop:%c   Start:%c   Delete:%c", TOR_UP,
+           TOR_DOWN, TOR_STOP, TOR_START, TOR_DELETE);
+   mvprintw(LINES - 1, (COLS - strlen(bindings)) / 2, bindings);
    refresh();
 
    int banner_width = strlen(BANNER) + 8;
