@@ -33,28 +33,26 @@ void init_ui(void) {
 void draw_ui(void) {
    clear();
 
+   mvprintw(LINES - 1, (COLS - strlen(BINDINGS)) / 2, BINDINGS);
+   refresh();
+
    int banner_width = strlen(BANNER) + 8;
    banner = newwin(3, banner_width, 0, (COLS - banner_width) / 2);
    box(banner, 0, 0);
    mvwprintw(banner, 1, 4, BANNER);
+   wrefresh(banner);
 
    header = newwin(3, COLS, 3, 0);
    box(header, 0, 0);
    mvwprintw(header, 1, 1, HEADER);
-
-   mvprintw(LINES - 1, (COLS - strlen(BINDINGS)) / 2, BINDINGS);
+   wrefresh(header);
 
    wheight = LINES - 8;
    win = newwin(wheight, COLS, 5, 0);
+   keypad(win, true);
 
    footer = newwin(3, COLS, LINES - 4, 0);
    box(footer, 0, 0);
-
-   refresh();
-   wrefresh(banner);
-   wrefresh(header);
-   wrefresh(win);
-   keypad(win, true);
 }
 
 void _drawitems(void) {
@@ -144,7 +142,6 @@ void handle_input(void) {
 }
 
 void housekeep(void) {
-   delwin(win);
-   delwin(banner);
+   refresh();
    endwin();
 }
