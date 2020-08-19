@@ -55,6 +55,9 @@ void draw_ui(void) {
    keypad(win, true);
 
    footer = newwin(3, COLS, LINES - 4, 0);
+
+   mvwprintw(win, 10, 1, "This is a line");
+
    box(footer, 0, 0);
 }
 
