@@ -10,7 +10,8 @@ void _verify_running() {
    char cmd_str[1024];
 
    if (REMOTE_USE == 1)
-      sprintf(server_prefix, "ssh -p %s %s", REMOTE_PORT, REMOTE_IP);
+      sprintf(server_prefix, "ssh -p %s %s@%s", REMOTE_PORT, REMOTE_USER,
+              REMOTE_IP);
    sprintf(cmd_str, "%s %s", server_prefix,
            "pidof transmission-daemon > /dev/null 2>&1");
 

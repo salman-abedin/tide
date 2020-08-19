@@ -26,7 +26,8 @@ void init_ui(void) {
    mark = start = 0;
 
    if (REMOTE_USE == 1)
-      sprintf(server_prefix, "ssh -p %s %s", REMOTE_PORT, REMOTE_IP);
+      sprintf(server_prefix, "ssh -p %s %s@%s", REMOTE_PORT, REMOTE_USER,
+              REMOTE_IP);
 }
 
 void draw_ui(void) {
