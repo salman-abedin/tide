@@ -53,6 +53,8 @@ void draw_ui(void) {
    refresh();
    wrefresh(banner);
    wrefresh(header);
+   wrefresh(win);
+   keypad(win, true);
 }
 
 void _drawitems(void) {
@@ -103,7 +105,7 @@ void handle_input(void) {
    while (1) {
       _drawitems();
       key = wgetch(win);
-      if (key == 'j') {
+      if (key == TOR_DOWN) {
          if (mark < wheight - 3 && mark < end - 1) {
             ++mark;
          } else if (end < count) {
@@ -113,7 +115,7 @@ void handle_input(void) {
             end = count > wheight - 2 ? wheight - 2 : count;
             start = mark = 0;
          }
-      } else if (key == 'k') {
+      } else if (key == TOR_UP) {
          if (mark == 0 && start > 0) {
             --end;
             --start;
@@ -126,16 +128,16 @@ void handle_input(void) {
                start = count > wheight - 2 ? count - wheight + 2 : 0;
             }
          }
-      } else if (key == 'l') {
+      } else if (key == TOR_START) {
          _send_args("-s");
-      } else if (key == 'h') {
+      } else if (key == TOR_STOP) {
          _send_args("-S");
-      } else if (key == 'd') {
+      } else if (key == TOR_DELETE) {
          _send_args("-rad");
          mark = mark > 0 ? mark - 1 : 0;
       } else if (key == KEY_RESIZE) {
          draw_ui();
-      } else if (key == 'q') {
+      } else if (key == TOR_QUIT) {
          break;
       }
    }
