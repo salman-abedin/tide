@@ -34,30 +34,17 @@ void init_ui(void) {
 void draw_ui(void) {
    clear();
 
-   sprintf(bindings, "Up:%c   Down:%c   Stop:%c   Start:%c   Delete:%c", TOR_UP,
-           TOR_DOWN, TOR_STOP, TOR_START, TOR_DELETE);
-   mvprintw(LINES - 1, (COLS - strlen(bindings)) / 2, bindings);
-   refresh();
-
-   int banner_width = strlen(BANNER) + 8;
-   banner = newwin(3, banner_width, 0, (COLS - banner_width) / 2);
-   box(banner, 0, 0);
-   mvwprintw(banner, 1, 4, BANNER);
-   wrefresh(banner);
-
-   header = newwin(3, COLS, 3, 0);
+   header = newwin(3, COLS, 0, 0);
    box(header, 0, 0);
-   mvwprintw(header, 1, 1, HEADER);
+   mvwaddnstr(header, 1, 1, HEADER, COLS - 2);
+   mvwaddnstr(header, 1, COLS - 7, "[tide]", COLS - 2);
    wrefresh(header);
 
-   wheight = LINES - 8;
-   win = newwin(wheight, COLS, 5, 0);
+   wheight = LINES - 4;
+   win = newwin(wheight, COLS, 2, 0);
    keypad(win, true);
 
-   footer = newwin(3, COLS, LINES - 4, 0);
-
-   mvwprintw(win, 10, 1, "This is a line");
-
+   footer = newwin(3, COLS, LINES - 3, 0);
    box(footer, 0, 0);
 }
 
@@ -91,7 +78,7 @@ void _drawitems(void) {
       wattroff(win, COLOR_PAIR(RUNNING_PAIR));
    }
 
-   mvwprintw(footer, 1, 1, items[count]);
+   mvwaddnstr(footer, 1, 1, items[count], COLS - 2);
    wrefresh(footer);
 }
 
