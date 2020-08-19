@@ -3,13 +3,13 @@
 #include <string.h>
 
 #include "../config.h"
-#include "cmd.h"
+#include "torrents.h"
 #include "ui.h"
 
-int mark, start, end, wheight, count, i, j;
+int mark, start, end, count, i, j;
+char server_prefix[64] = {0};
 char** items;
-WINDOW *win, *banner, *summary, *header;
-char server_prefix[256] = {0};
+WINDOW* win;
 
 void init_ui(void) {
    initscr();
@@ -19,9 +19,9 @@ void init_ui(void) {
 
    start_color();
    use_default_colors();
-   init_pair(RUNNING_PAIR, COLOR_YELLOW, -1);
-   init_pair(STOPPED_PAIR, COLOR_RED, -1);
-   init_pair(COMPLETED_PAIR, COLOR_GREEN, -1);
+   init_pair(Pair_Running, COLOR_YELLOW, -1);
+   init_pair(Pair_Stopped, COLOR_RED, -1);
+   init_pair(Pair_Completed, COLOR_GREEN, -1);
 
    mark = start = 0;
 
@@ -33,62 +33,64 @@ void init_ui(void) {
 void draw_ui(void) {
    clear();
 
-   int banner_width = strlen(BANNER) + 8;
-   banner = newwin(3, banner_width, 0, (COLS - banner_width) / 2);
-   box(banner, 0, 0);
-   mvwprintw(banner, 1, 4, BANNER);
-
-   header = newwin(3, COLS, 3, 0);
-   /* box(header, 0, 0); */
-   wborder(header, 0, 0, 0, 1, 0, 0, 1, 1);
-   mvwprintw(header, 1, 1, HEADER);
-
-   mvprintw(LINES - 1, (COLS - strlen(BINDINGS)) / 2, BINDINGS);
-
-   wheight = LINES - 7;
-   win = newwin(wheight, COLS, 6, 0);
-
-   refresh();
-   wrefresh(banner);
-   wrefresh(header);
+   win = newwin(LINES, COLS, 0, 0);
+   keypad(win, true);
 }
 
 void _drawitems(void) {
    char cmd_str[1024];
+   Torrents torrents;
+
    sprintf(cmd_str, "%s %s", server_prefix,
            "transmission-remote -l 2> /dev/null");
-   cmd_t cmd = init_cmd(cmd_str);
 
-   items = ++cmd.outputs;
-   count = cmd.lines - 2;
-   end = count > wheight - 2 ? wheight - 2 : count;
+   torrents = init_cmd(cmd_str);
+   count = torrents.count - 2;
+   if (count > 0)
+      items = ++torrents.list;
+   else
+      items = torrents.list;
+
+   end = count > LINES - 2 ? LINES - 2 : count;
 
    werase(win);
    box(win, 0, 0);
-   for (i = 1, j = start; j < end; ++i, ++j) {
+
+   mvwaddnstr(win, 1, 1, HEADER, COLS - 2);
+   mvwaddnstr(win, 1, COLS - 7, "[tide]", COLS - 2);
+   wmove(win, 2, 1);
+   whline(win, 0, COLS - 2);
+
+   for (i = 3, j = start; j < end; ++i, ++j) {
       if (i - 1 == mark)
          wattron(win, A_REVERSE);
       else if (strstr(items[j], "   100%"))
-         wattron(win, COLOR_PAIR(COMPLETED_PAIR));
+         wattron(win, COLOR_PAIR(Pair_Completed));
       else if (strstr(items[j], "  Stopped"))
-         wattron(win, COLOR_PAIR(STOPPED_PAIR));
+         wattron(win, COLOR_PAIR(Pair_Stopped));
       else
-         wattron(win, COLOR_PAIR(RUNNING_PAIR));
+         wattron(win, COLOR_PAIR(Pair_Running));
 
       mvwaddnstr(win, i, 1, items[j], COLS - 2);
 
       wattroff(win, A_REVERSE);
-      wattroff(win, COLOR_PAIR(COMPLETED_PAIR));
-      wattroff(win, COLOR_PAIR(STOPPED_PAIR));
-      wattroff(win, COLOR_PAIR(RUNNING_PAIR));
+      wattroff(win, COLOR_PAIR(Pair_Completed));
+      wattroff(win, COLOR_PAIR(Pair_Stopped));
+      wattroff(win, COLOR_PAIR(Pair_Running));
    }
+
+   wmove(win, LINES - 3, 1);
+   whline(win, 0, COLS - 2);
+   mvwaddnstr(win, LINES - 2, 1, items[count], COLS - 2);
 }
 
 void _send_args(char* arg) {
    char cmd[1024];
-   sprintf(cmd, "%s transmission-remote -t %.10s %s > /dev/null 2>&1",
-           server_prefix, items[mark], arg);
-   system(cmd);
+   if (count > 0) {
+      sprintf(cmd, "%s transmission-remote -t %.10s %s > /dev/null 2>&1",
+              server_prefix, items[mark], arg);
+      system(cmd);
+   }
 }
 
 void handle_input(void) {
@@ -98,17 +100,17 @@ void handle_input(void) {
    while (1) {
       _drawitems();
       key = wgetch(win);
-      if (key == 'j') {
-         if (mark < wheight - 3 && mark < end - 1) {
+      if (key == TOR_DOWN) {
+         if (mark < LINES - 3 && mark < end - 1) {
             ++mark;
          } else if (end < count) {
             ++end;
             ++start;
          } else {
-            end = count > wheight - 2 ? wheight - 2 : count;
+            end = count > LINES - 2 ? LINES - 2 : count;
             start = mark = 0;
          }
-      } else if (key == 'k') {
+      } else if (key == TOR_UP) {
          if (mark == 0 && start > 0) {
             --end;
             --start;
@@ -117,27 +119,23 @@ void handle_input(void) {
                --mark;
             } else {
                end = count;
-               mark = count > wheight - 2 ? wheight - 3 : count - 1;
-               start = count > wheight - 2 ? count - wheight + 2 : 0;
+               mark = count > LINES - 2 ? LINES - 3 : count - 1;
+               start = count > LINES - 2 ? count - LINES + 2 : 0;
             }
          }
-      } else if (key == 'l') {
+      } else if (key == TOR_START) {
          _send_args("-s");
-      } else if (key == 'h') {
+      } else if (key == TOR_STOP) {
          _send_args("-S");
-      } else if (key == 'd') {
+      } else if (key == TOR_DELETE) {
          _send_args("-rad");
          mark = mark > 0 ? mark - 1 : 0;
       } else if (key == KEY_RESIZE) {
          draw_ui();
-      } else if (key == 'q') {
+      } else if (key == TOR_QUIT) {
          break;
       }
    }
 }
 
-void housekeep(void) {
-   delwin(win);
-   delwin(banner);
-   endwin();
-}
+void housekeep(void) { endwin(); }
