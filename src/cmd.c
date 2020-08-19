@@ -38,18 +38,17 @@ cmd_t init_cmd(char* cmd_str) {
 
    lines = 0;
    while (fgets(line, sizeof line, pipe)) {
-      ++lines;
-      if (lines == 1) continue;
       line[strcspn(line, "\n")] = 0;
-      strcpy(cmd.outputs[lines - 2], line);
-      if (lines - 2 == capacity) {
+      strcpy(cmd.outputs[lines], line);
+      if (lines == capacity - 2) {
          capacity *= 2;
          cmd.outputs = realloc(cmd.outputs, sizeof(char*) * capacity);
          for (i = 0; i < capacity; ++i)
             cmd.outputs[i] = calloc(sizeof line, sizeof(char));
       }
+      ++lines;
    }
-   cmd.lines = lines - 2;
+   cmd.lines = lines;
    pclose(pipe);
 
    return cmd;
