@@ -7,9 +7,9 @@
    "Name"
 #define BINDINGS "h:Stop   j:Down   k:Up   l:Start   d:Delete   q:Quit"
 
-#define RUNNING_PAIR 1
-#define STOPPED_PAIR 2
-#define COMPLETED_PAIR 3
+#define RUNNING_PAIR 0
+#define STOPPED_PAIR 1
+#define COMPLETED_PAIR 2
 
 void init_ui(void);
 void draw_ui(void);

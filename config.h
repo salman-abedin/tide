@@ -2,11 +2,17 @@
 //                             Bindings
 //==============================================================================
 
-/* vim bindings */
+/* /1* vim bindings *1/ */
+/* #define TOR_UP 'k' */
+/* #define TOR_DOWN 'j' */
+/* #define TOR_START 'l' */
+/* #define TOR_STOP 'h' */
+
+/* modified bindings */
 #define TOR_UP 'k'
-#define TOR_DOWN 'j'
-#define TOR_START 'l'
-#define TOR_STOP 'h'
+#define TOR_DOWN 'l'
+#define TOR_START ';'
+#define TOR_STOP 'j'
 
 /* /1* normie bindings *1/ */
 /* #define TOR_UP KEY_UP */
