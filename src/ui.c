@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "../config.h"
-#include "cmd.h"
+#include "torrents.h"
 #include "ui.h"
 
 int mark, start, end, wheight, count, i, j;
@@ -133,7 +133,4 @@ void handle_input(void) {
    }
 }
 
-void housekeep(void) {
-   refresh();
-   endwin();
-}
+void housekeep(void) { endwin(); }
