@@ -49,12 +49,18 @@ void draw_ui(void) {
 
 void _drawitems(void) {
    char cmd_str[1024];
+   Torrents torrents;
+
    sprintf(cmd_str, "%s %s", server_prefix,
            "transmission-remote -l 2> /dev/null");
-   cmd_t cmd = init_cmd(cmd_str);
 
-   items = ++cmd.outputs;
-   count = cmd.lines - 2;
+   torrents = init_cmd(cmd_str);
+   count = torrents.count - 2;
+   if (count > 0)
+      items = ++torrents.list;
+   else
+      items = torrents.list;
+
    end = count > wheight - 2 ? wheight - 2 : count;
 
    werase(win);
@@ -83,9 +89,11 @@ void _drawitems(void) {
 
 void _send_args(char* arg) {
    char cmd[1024];
-   sprintf(cmd, "%s transmission-remote -t %.10s %s > /dev/null 2>&1",
-           server_prefix, items[mark], arg);
-   system(cmd);
+   if (count > 0) {
+      sprintf(cmd, "%s transmission-remote -t %.10s %s > /dev/null 2>&1",
+              server_prefix, items[mark], arg);
+      system(cmd);
+   }
 }
 
 void handle_input(void) {

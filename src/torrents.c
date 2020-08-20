@@ -13,16 +13,14 @@ void _verify_running() {
       sprintf(server_prefix, "ssh -p %s %s@%s", REMOTE_PORT, REMOTE_USER,
               REMOTE_IP);
 
-   /* sprintf(cmd_str, "%s %s", server_prefix, */
-   /*         "pidof transmission-daemon > /dev/null 2>&1"); */
+   sprintf(cmd_str, "%s %s", server_prefix,
+           "pidof transmission-daemon > /dev/null 2>&1");
 
-   /* sprintf(cmd_str, "%s", "pidof transmission-daemon > /dev/null 2>&1"); */
-
-   /* if (system(cmd_str) != 0) { */
-   /*    sprintf(cmd_str, "%s %s", server_prefix, */
-   /*            "transmission-daemon > /dev/null 2>&1"); */
-   /*    system(cmd_str); */
-   /* } */
+   if (system(cmd_str) != 0) {
+      sprintf(cmd_str, "%s %s", server_prefix,
+              "transmission-daemon > /dev/null 2>&1");
+      system(cmd_str);
+   }
 }
 
 Torrents init_cmd(char* cmd_str) {
@@ -34,7 +32,7 @@ Torrents init_cmd(char* cmd_str) {
    capacity = 50;
    torrents.list = calloc(capacity, sizeof(char*));
 
-   /* _verify_running(); */
+   _verify_running();
    pipe = popen(cmd_str, "r");
 
    lines = 0;
