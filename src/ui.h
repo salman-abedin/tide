@@ -4,7 +4,6 @@
 #define HEADER                                                                \
    "    ID   Done       Have  ETA           Up    Down  Ratio  Status       " \
    "Name"
-#define BINDINGS "h:Stop   j:Down   k:Up   l:Start   d:Delete   q:Quit"
 
 #define RUNNING_PAIR 0
 #define STOPPED_PAIR 1
