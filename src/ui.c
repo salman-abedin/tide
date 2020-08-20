@@ -8,9 +8,8 @@
 
 int mark, start, end, wheight, count, i, j;
 char server_prefix[64] = {0};
-char bindings[64] = {0};
 char** items;
-WINDOW *win, *banner, *header, *footer;
+WINDOW *win, *header, *footer;
 
 void init_ui(void) {
    initscr();
