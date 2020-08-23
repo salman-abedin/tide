@@ -19,9 +19,9 @@ void init_ui(void) {
 
    start_color();
    use_default_colors();
-   init_pair(RUNNING_PAIR, COLOR_YELLOW, -1);
-   init_pair(STOPPED_PAIR, COLOR_RED, -1);
-   init_pair(COMPLETED_PAIR, COLOR_GREEN, -1);
+   init_pair(Pair_Running, COLOR_YELLOW, -1);
+   init_pair(Pair_Stopped, COLOR_RED, -1);
+   init_pair(Pair_Completed, COLOR_GREEN, -1);
 
    mark = start = 0;
 
@@ -69,18 +69,18 @@ void _drawitems(void) {
       if (i - 1 == mark)
          wattron(win, A_REVERSE);
       else if (strstr(items[j], "   100%"))
-         wattron(win, COLOR_PAIR(COMPLETED_PAIR));
+         wattron(win, COLOR_PAIR(Pair_Completed));
       else if (strstr(items[j], "  Stopped"))
-         wattron(win, COLOR_PAIR(STOPPED_PAIR));
+         wattron(win, COLOR_PAIR(Pair_Stopped));
       else
-         wattron(win, COLOR_PAIR(RUNNING_PAIR));
+         wattron(win, COLOR_PAIR(Pair_Running));
 
       mvwaddnstr(win, i, 1, items[j], COLS - 2);
 
       wattroff(win, A_REVERSE);
-      wattroff(win, COLOR_PAIR(COMPLETED_PAIR));
-      wattroff(win, COLOR_PAIR(STOPPED_PAIR));
-      wattroff(win, COLOR_PAIR(RUNNING_PAIR));
+      wattroff(win, COLOR_PAIR(Pair_Completed));
+      wattroff(win, COLOR_PAIR(Pair_Stopped));
+      wattroff(win, COLOR_PAIR(Pair_Running));
    }
 
    mvwaddnstr(footer, 1, 1, items[count], COLS - 2);
