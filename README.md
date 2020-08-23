@@ -8,7 +8,7 @@ tide is the successor to [tide.sh](https://github.com/salman-abedin/tide.sh)
 ## Features
 
 -  Tiny & Fast
--  Vim bindings (consult **config.h** for modifications)
+-  Vim bindings (consult **config.h**)
 -  Stopping torrents
 -  Starting torrents
 -  Deleting torrents (Including Files)
