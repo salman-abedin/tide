@@ -28,22 +28,22 @@ tide is the successor to [tide.sh](https://github.com/salman-abedin/tide.sh)
 git clone https://github.com/salman-abedin/tide.git && cd tide && sudo make install
 ```
 
-## Update
-
-```sh
-git pull --no-rebase && sudo make install
-```
-
 ## FAQ
 
 ### How are you sending the magnet link to the server?
 
 Using **xdg-open** (shamefully).  
-Here is my setup (Exhibit A of my shamefulness) ...  
+Here is my setup (Exhibit A of my shamefulness) ...
 
 https://github.com/salman-abedin/magpie/blob/master/.config/mimeapps.list  
 https://github.com/salman-abedin/magpie/blob/master/.local/share/applications/transmission.desktop  
 https://github.com/salman-abedin/alfred/blob/master/src/torrent.sh
+
+## Update
+
+```sh
+git pull --no-rebase && sudo make install
+```
 
 ## Uninstallation
 
