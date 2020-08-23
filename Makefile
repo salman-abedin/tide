@@ -1,10 +1,10 @@
 include config.mk
 
-all: $(NAME) config.h
-$(NAME): $(OBJ)
+all: $(BIN) config.h
+$(BIN): $(OBJ)
 install: all
 	@mkdir -p $(BIN_DIR)
-	@mv $(NAME) $(BIN_DIR)
+	@mv $(BIN) $(BIN_DIR)
 	@rm -f $(OBJ)
 	@echo Done moving the binary to ${DESTDIR}${BIN_DIR}
 uninstall:
