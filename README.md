@@ -28,6 +28,12 @@ tide is the successor to [tide.sh](https://github.com/salman-abedin/tide.sh)
 git clone https://github.com/salman-abedin/tide.git && cd tide && sudo make install
 ```
 
+## Update
+
+```sh
+git pull --no-rebase && sudo make install
+```
+
 ## FAQ
 
 ### How are you sending the magnet link to the server?
