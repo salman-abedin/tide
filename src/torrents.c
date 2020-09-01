@@ -6,19 +6,12 @@
 #include "torrents.h"
 
 void _verify_running() {
-   char server_prefix[256] = {0};
    char cmd_str[1024];
 
-   if (REMOTE_USE == 1)
-      sprintf(server_prefix, "ssh -p %s %s@%s", REMOTE_PORT, REMOTE_USER,
-              REMOTE_IP);
-
-   sprintf(cmd_str, "%s %s", server_prefix,
-           "pidof transmission-daemon > /dev/null 2>&1");
+   sprintf(cmd_str, "pidof transmission-daemon > /dev/null 2>&1");
 
    if (system(cmd_str) != 0) {
-      sprintf(cmd_str, "%s %s", server_prefix,
-              "transmission-daemon > /dev/null 2>&1");
+      sprintf(cmd_str, "transmission-daemon > /dev/null 2>&1");
       system(cmd_str);
    }
 }

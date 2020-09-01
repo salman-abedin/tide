@@ -7,7 +7,6 @@
 #include "ui.h"
 
 int mark, start, end, count, i, j;
-char server_prefix[64] = {0};
 char** items;
 WINDOW* win;
 
@@ -24,10 +23,6 @@ void init_ui(void) {
    init_pair(Pair_Completed, COLOR_GREEN, -1);
 
    mark = start = 0;
-
-   if (REMOTE_USE == 1)
-      sprintf(server_prefix, "ssh -p %s %s@%s", REMOTE_PORT, REMOTE_USER,
-              REMOTE_IP);
 }
 
 void draw_ui(void) {
@@ -41,8 +36,7 @@ void _drawitems(void) {
    char cmd_str[1024];
    Torrents torrents;
 
-   sprintf(cmd_str, "%s %s", server_prefix,
-           "transmission-remote -l 2> /dev/null");
+   sprintf(cmd_str, "transmission-remote -l 2> /dev/null");
 
    torrents = init_cmd(cmd_str);
    count = torrents.count - 2;
@@ -62,7 +56,7 @@ void _drawitems(void) {
    whline(win, 0, COLS - 2);
 
    for (i = 3, j = start; j < end; ++i, ++j) {
-      if (i - 1 == mark)
+      if (i - 3 == mark)
          wattron(win, A_REVERSE);
       else if (strstr(items[j], "   100%"))
          wattron(win, COLOR_PAIR(Pair_Completed));
@@ -87,8 +81,8 @@ void _drawitems(void) {
 void _send_args(char* arg) {
    char cmd[1024];
    if (count > 0) {
-      sprintf(cmd, "%s transmission-remote -t %.10s %s > /dev/null 2>&1",
-              server_prefix, items[mark], arg);
+      sprintf(cmd, "transmission-remote -t %.10s %s > /dev/null 2>&1",
+              items[mark], arg);
       system(cmd);
    }
 }

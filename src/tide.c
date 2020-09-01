@@ -1,6 +1,6 @@
 /*
- * puri
- * minimal CLI URL launcher
+ * tide
+ * minimal Transmission CLI client
  */
 
 #include "ui.h"
