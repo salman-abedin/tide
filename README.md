@@ -1,4 +1,4 @@
-![](demo.gif)
+![](preview.gif)
 
 # tide: Minimal Transmission CLI client
 
