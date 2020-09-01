@@ -75,7 +75,7 @@ void _drawitems(void) {
 
    wmove(win, LINES - 3, 1);
    whline(win, 0, COLS - 2);
-   mvwaddnstr(win, LINES - 2, 1, items[count], COLS - 2);
+   mvwaddnstr(win, LINES - 2, 1, count == 0 ? "" : items[count], COLS - 2);
 }
 
 void _send_args(char* arg) {
