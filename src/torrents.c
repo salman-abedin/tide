@@ -39,8 +39,7 @@ Torrents init_cmd(char* cmd_str) {
    while (fgets(line, sizeof line, pipe)) {
       line[strcspn(line, "\n")] = 0;
       torrents.list[lines] = calloc(sizeof line, sizeof(char));
-      strcpy(torrents.list[lines], line);
-      ++lines;
+      strcpy(torrents.list[lines++], line);
 
       if (lines == capacity) {
          capacity *= 2;
