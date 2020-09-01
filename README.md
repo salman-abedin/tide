@@ -29,7 +29,7 @@ git clone https://github.com/salman-abedin/tide.git && cd tide && sudo make inst
 -  **Remote Access**. (dependencies: ssh)
 
 ```sh
-cd devour
+cd tide
 patch -s -p0 < tide-remote_access-8.0.diff    # Add the feature
 patch -s -R  < tide-remote_access-8.0.diff # Remove the feature
 sudo make install                      # Reinstall
