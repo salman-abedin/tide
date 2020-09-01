@@ -6,10 +6,10 @@
 #include "torrents.h"
 #include "ui.h"
 
-int mark, start, end, wheight, count, i, j;
+int mark, start, end, count, i, j;
 char server_prefix[64] = {0};
 char** items;
-WINDOW *win, *header, *footer;
+WINDOW* win;
 
 void init_ui(void) {
    initscr();
@@ -33,18 +33,8 @@ void init_ui(void) {
 void draw_ui(void) {
    clear();
 
-   header = newwin(3, COLS, 0, 0);
-   box(header, 0, 0);
-   mvwaddnstr(header, 1, 1, HEADER, COLS - 2);
-   mvwaddnstr(header, 1, COLS - 7, "[tide]", COLS - 2);
-   wrefresh(header);
-
-   wheight = LINES - 4;
-   win = newwin(wheight, COLS, 2, 0);
+   win = newwin(LINES, COLS, 0, 0);
    keypad(win, true);
-
-   footer = newwin(3, COLS, LINES - 3, 0);
-   box(footer, 0, 0);
 }
 
 void _drawitems(void) {
@@ -61,11 +51,17 @@ void _drawitems(void) {
    else
       items = torrents.list;
 
-   end = count > wheight - 2 ? wheight - 2 : count;
+   end = count > LINES - 2 ? LINES - 2 : count;
 
    werase(win);
    box(win, 0, 0);
-   for (i = 1, j = start; j < end; ++i, ++j) {
+
+   mvwaddnstr(win, 1, 1, HEADER, COLS - 2);
+   mvwaddnstr(win, 1, COLS - 7, "[tide]", COLS - 2);
+   wmove(win, 2, 1);
+   whline(win, 0, COLS - 2);
+
+   for (i = 3, j = start; j < end; ++i, ++j) {
       if (i - 1 == mark)
          wattron(win, A_REVERSE);
       else if (strstr(items[j], "   100%"))
@@ -83,8 +79,9 @@ void _drawitems(void) {
       wattroff(win, COLOR_PAIR(Pair_Running));
    }
 
-   mvwaddnstr(footer, 1, 1, items[count], COLS - 2);
-   wrefresh(footer);
+   wmove(win, LINES - 3, 1);
+   whline(win, 0, COLS - 2);
+   mvwaddnstr(win, LINES - 2, 1, items[count], COLS - 2);
 }
 
 void _send_args(char* arg) {
@@ -104,13 +101,13 @@ void handle_input(void) {
       _drawitems();
       key = wgetch(win);
       if (key == TOR_DOWN) {
-         if (mark < wheight - 3 && mark < end - 1) {
+         if (mark < LINES - 3 && mark < end - 1) {
             ++mark;
          } else if (end < count) {
             ++end;
             ++start;
          } else {
-            end = count > wheight - 2 ? wheight - 2 : count;
+            end = count > LINES - 2 ? LINES - 2 : count;
             start = mark = 0;
          }
       } else if (key == TOR_UP) {
@@ -122,8 +119,8 @@ void handle_input(void) {
                --mark;
             } else {
                end = count;
-               mark = count > wheight - 2 ? wheight - 3 : count - 1;
-               start = count > wheight - 2 ? count - wheight + 2 : 0;
+               mark = count > LINES - 2 ? LINES - 3 : count - 1;
+               start = count > LINES - 2 ? count - LINES + 2 : 0;
             }
          }
       } else if (key == TOR_START) {
