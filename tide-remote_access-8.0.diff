@@ -1,0 +1,85 @@
+Allows you to access the transmission daemon remotely.
+---
+diff '--color=auto' -Nru tide_old/config.h tide_new/config.h
+--- config.h	2020-09-02 03:28:27.916968316 +0600
++++ config.h	2020-09-02 03:13:10.382913107 +0600
+@@ -16,3 +16,13 @@
+ 
+ #define TOR_DELETE 'd'
+ #define TOR_QUIT 'q'
++
++//==============================================================================
++//                             Remote Config
++//==============================================================================
++
++#define REMOTE_USE 0 /* 1 = remote usage, 0 = local usage */
++
++#define REMOTE_IP "192.168.0.101" /* IP of the host running the daemon */
++#define REMOTE_PORT "8022"        /* port of the host running the daemon */
++#define REMOTE_USER "u0_a120"     /* username of the host running the daemon */
+diff '--color=auto' -Nru tide_old/src/torrents.c tide_new/src/torrents.c
+--- src/_torrents.c	2020-09-02 03:15:07.573920159 +0600
++++ src/_torrents.c	2020-09-02 03:13:10.401913109 +0600
+@@ -6,12 +6,19 @@
+ #include "torrents.h"
+ 
+ void _verify_running() {
++   char server_prefix[256] = {0};
+    char cmd_str[1024];
+ 
+-   sprintf(cmd_str, "pidof transmission-daemon > /dev/null 2>&1");
++   if (REMOTE_USE == 1)
++      sprintf(server_prefix, "ssh -p %s %s@%s", REMOTE_PORT, REMOTE_USER,
++              REMOTE_IP);
++
++   sprintf(cmd_str, "%s %s", server_prefix,
++           "pidof transmission-daemon > /dev/null 2>&1");
+ 
+    if (system(cmd_str) != 0) {
+-      sprintf(cmd_str, "transmission-daemon > /dev/null 2>&1");
++      sprintf(cmd_str, "%s %s", server_prefix,
++              "transmission-daemon > /dev/null 2>&1");
+       system(cmd_str);
+    }
+ }
+diff '--color=auto' -Nru tide_old/src/ui.c tide_new/src/ui.c
+--- src/ui.c	2020-09-02 03:16:17.723924380 +0600
++++ src/ui.c	2020-09-02 03:13:10.401913109 +0600
+@@ -7,6 +7,7 @@
+ #include "ui.h"
+ 
+ int mark, start, end, count, i, j;
++char server_prefix[64] = {0};
+ char** items;
+ WINDOW* win;
+ 
+@@ -23,6 +24,10 @@
+    init_pair(Pair_Completed, COLOR_GREEN, -1);
+ 
+    mark = start = 0;
++
++   if (REMOTE_USE == 1)
++      sprintf(server_prefix, "ssh -p %s %s@%s", REMOTE_PORT, REMOTE_USER,
++              REMOTE_IP);
+ }
+ 
+ void draw_ui(void) {
+@@ -36,7 +41,8 @@
+    char cmd_str[1024];
+    Torrents torrents;
+ 
+-   sprintf(cmd_str, "transmission-remote -l 2> /dev/null");
++   sprintf(cmd_str, "%s %s", server_prefix,
++           "transmission-remote -l 2> /dev/null");
+ 
+    torrents = init_cmd(cmd_str);
+    count = torrents.count - 2;
+@@ -81,8 +87,8 @@
+ 
+   sscanf(items[mark], "%d", &id);
+   if (count > 0) {
+-     sprintf(cmd, "transmission-remote -t %d %s > /dev/null 2>&1", id, arg);
++     sprintf(cmd, "%s transmission-remote -t %d %s > /dev/null 2>&1", server_prefix, id, arg);
+       system(cmd);
+    }
+ }
