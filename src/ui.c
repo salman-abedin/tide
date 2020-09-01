@@ -51,7 +51,7 @@ void _drawitems(void) {
    else
       items = torrents.list;
 
-   end = count > LINES - 2 ? LINES - 2 : count;
+   end = count > LINES - 6 ? LINES - 6 : count;
 
    werase(win);
    box(win, 0, 0);
