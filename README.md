@@ -12,15 +12,11 @@ tide is the successor to [tide.sh](https://github.com/salman-abedin/tide.sh)
 -  Stopping torrents
 -  Starting torrents
 -  Deleting torrents (Including Files)
--  Remote access (consult **config.h**)
+-  Remote access (through patching)
 
 ## Libraries
 
 -  ncurses
-
-## Dependencies
-
--  **ssh** (for remote usage)
 
 ## Installation
 
@@ -28,9 +24,20 @@ tide is the successor to [tide.sh](https://github.com/salman-abedin/tide.sh)
 git clone https://github.com/salman-abedin/tide.git && cd tide && sudo make install
 ```
 
+## Patches
+
+-  **Remote Access**. (dependencies: ssh)
+
+```sh
+cd tide
+patch -s -p0 < tide-remote_access-8.0.diff    # Add the feature
+patch -s -R  < tide-remote_access-8.0.diff # Remove the feature
+sudo make install                      # Reinstall
+```
+
 ## FAQ
 
-### How are you sending the magnet link to the server?
+### How are you sending the magnet link to the daemon?
 
 Using **xdg-open** (shamefully).  
 Here is my setup (Exhibit A of my shamefulness) ...
@@ -51,10 +58,11 @@ git pull --no-rebase && sudo make install
 sudo make uninstall
 ```
 
-## Patches
+## Logs
 
 -  **27/07/20**:- Added scrolling support
 -  **15/08/20**:- Rewrote the shellscript in C
+-  **02/09/20**:- Added remote access patch
 
 ## TODOs
 
@@ -71,7 +79,7 @@ sudo make uninstall
 | [bolt](https://github.com/salman-abedin/bolt)           | The launcher wrapper   |
 | [uniblocks](https://github.com/salman-abedin/uniblocks) | The status bar wrapper |
 | [puri](https://github.com/salman-abedin/puri)           | Minimal URL launcher   |
-| [devour](https://github.com/salman-abedin/devour)       | Terminal swallowing    |
+| [devour](https://github.com/salman-abedin/devour)       | X11 window swallower   |
 | [crystal](https://github.com/salman-abedin/crystal)     | The transparent setup  |
 | [Magpie](https://github.com/salman-abedin/magpie)       | The dotfiles           |
 | [Alfred](https://github.com/salman-abedin/alfred)       | The scripts            |

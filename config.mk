@@ -6,9 +6,8 @@ OBJ = $(SRC:.c=.o)
 
 CC     = cc
 CFLAGS = -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -pedantic -O2
+BIN    = src/main
 
+LDLIBS = -s -lncurses
 NAME    = tide
 VERSION = 8.0
-LDLIBS = -s -lncurses
-
-BIN = src/$(NAME)
