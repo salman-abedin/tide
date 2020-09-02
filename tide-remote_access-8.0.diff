@@ -18,8 +18,8 @@ diff '--color=auto' -Nru tide_old/config.h tide_new/config.h
 +#define REMOTE_PORT "8022"        /* port of the host running the daemon */
 +#define REMOTE_USER "u0_a120"     /* username of the host running the daemon */
 diff '--color=auto' -Nru tide_old/src/torrents.c tide_new/src/torrents.c
---- src/torrents.c	2020-09-02 03:15:07.573920159 +0600
-+++ src/torrents.c	2020-09-02 03:13:10.401913109 +0600
+--- src/_torrents.c	2020-09-02 03:15:07.573920159 +0600
++++ src/_torrents.c	2020-09-02 03:13:10.401913109 +0600
 @@ -6,12 +6,19 @@
  #include "torrents.h"
  
