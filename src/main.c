@@ -1,6 +1,6 @@
 /*
  * tide
- * minimal Transmission CLI client
+ * Minimal Transmission CLI client
  */
 
 #include "ui.h"

@@ -11,4 +11,4 @@ NAME    = tide
 VERSION = 8.0
 LDLIBS = -s -lncurses
 
-BIN = src/$(NAME)
+BIN = src/main

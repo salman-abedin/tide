@@ -4,7 +4,7 @@ all: $(BIN) config.h
 $(BIN): $(OBJ)
 install: all
 	@mkdir -p $(BIN_DIR)
-	@mv $(BIN) $(BIN_DIR)
+	@mv $(BIN) $(BIN_DIR)/$(NAME)
 	@rm -f $(OBJ)
 	@echo Done moving the binary to ${DESTDIR}${BIN_DIR}
 uninstall:
