@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "../config.h"
-#include "torrents.h"
+#include "_torrents.h"
 #include "ui.h"
 
 int mark, start, end, count, i, j;

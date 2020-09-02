@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "../config.h"
-#include "torrents.h"
+#include "_torrents.h"
 
 void _verify_running() {
    char cmd_str[1024];
