@@ -37,7 +37,7 @@ sudo make install                      # Reinstall
 
 ## FAQ
 
-### How are you sending the magnet link to the server?
+### How are you sending the magnet link to the daemon?
 
 Using **xdg-open** (shamefully).  
 Here is my setup (Exhibit A of my shamefulness) ...
