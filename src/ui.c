@@ -1,10 +1,11 @@
+#include "ui.h"
+
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "../config.h"
 #include "_torrents.h"
-#include "ui.h"
 
 int mark, start, end, count, i, j;
 char** items;
@@ -100,6 +101,7 @@ void handle_input(void) {
          if (mark < LINES - 3 && mark < end - 1) {
             ++mark;
          } else if (end < count) {
+            system("ns scroll");
             ++end;
             ++start;
          } else {

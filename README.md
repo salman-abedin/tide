@@ -39,7 +39,7 @@ sudo make install                      # Reinstall
 
 ### How are you sending the magnet link to the daemon?
 
-Using **xdg-open** (shamefully).  
+Using **xdg-open** (shamefully).
 Here is my setup (Exhibit A of my shamefulness) ...
 
 https://github.com/salman-abedin/magpie/blob/master/.config/mimeapps.list  
@@ -49,7 +49,7 @@ https://github.com/salman-abedin/alfred/blob/master/src/torrent.sh
 ## Update
 
 ```sh
-git pull --no-rebase && sudo make install
+git pull rebase && sudo make install
 ```
 
 ## Uninstallation
@@ -70,7 +70,7 @@ sudo make uninstall
 -  Marking
 -  Direct magnet adding
 
----
+--
 
 ## Repos you might be interested in
 
