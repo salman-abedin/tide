@@ -79,10 +79,12 @@ void _drawitems(void) {
 }
 
 void _send_args(char* arg) {
+   int id;
    char cmd[1024];
+
+   sscanf(items[mark], "%d", &id);
    if (count > 0) {
-      sprintf(cmd, "transmission-remote -t %.10s %s > /dev/null 2>&1",
-              items[mark], arg);
+      sprintf(cmd, "transmission-remote -t %d %s > /dev/null 2>&1", id, arg);
       system(cmd);
    }
 }
