@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "../config.h"
 #include "_torrents.h"
@@ -13,6 +14,7 @@ void _verify_running() {
    if (system(cmd_str) != 0) {
       sprintf(cmd_str, "transmission-daemon > /dev/null 2>&1");
       system(cmd_str);
+      sleep(2);
    }
 }
 
