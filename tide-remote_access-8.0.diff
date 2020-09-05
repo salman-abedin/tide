@@ -75,13 +75,11 @@ diff '--color=auto' -Nru tide_old/src/ui.c tide_new/src/ui.c
     torrents = init_cmd(cmd_str);
     count = torrents.count - 2;
 @@ -81,8 +87,8 @@
- void _send_args(char* arg) {
-    char cmd[1024];
-    if (count > 0) {
--      sprintf(cmd, "transmission-remote -t %.10s %s > /dev/null 2>&1",
--              items[mark], arg);
-+      sprintf(cmd, "%s transmission-remote -t %.10s %s > /dev/null 2>&1",
-+              server_prefix, items[mark], arg);
+ 
+   sscanf(items[mark], "%d", &id);
+   if (count > 0) {
+-     sprintf(cmd, "transmission-remote -t %d %s > /dev/null 2>&1", id, arg);
++     sprintf(cmd, "%s transmission-remote -t %d %s > /dev/null 2>&1", server_prefix, id, arg);
        system(cmd);
     }
  }
