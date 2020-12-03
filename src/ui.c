@@ -6,15 +6,19 @@
 #include "_torrents.h"
 #include "ui.h"
 
-int mark, start, end, count, i, j;
+int mark, start, end, count, old_count, i, j;
 char** items;
+char cmd_str[1024];
 WINDOW* win;
+Torrents torrents;
 
 void init_ui(void) {
    initscr();
    cbreak();
    noecho();
    curs_set(0);
+
+   sprintf(cmd_str, "transmission-remote -l 2> /dev/null");
 
    start_color();
    use_default_colors();
@@ -23,6 +27,9 @@ void init_ui(void) {
    init_pair(Pair_Completed, COLOR_GREEN, -1);
 
    mark = start = 0;
+
+   old_count = init_cmd(cmd_str).count - 2;
+   end = old_count > LINES - 6 ? LINES - 6 : old_count;
 }
 
 void draw_ui(void) {
@@ -33,19 +40,18 @@ void draw_ui(void) {
 }
 
 void _drawitems(void) {
-   char cmd_str[1024];
-   Torrents torrents;
-
-   sprintf(cmd_str, "transmission-remote -l 2> /dev/null");
-
    torrents = init_cmd(cmd_str);
    count = torrents.count - 2;
+
+   if (old_count != count) {
+      old_count = count;
+      end = count > LINES - 6 ? LINES - 6 : count;
+   }
+
    if (count > 0)
       items = ++torrents.list;
    else
       items = torrents.list;
-
-   end = count > LINES - 6 ? LINES - 6 : count;
 
    werase(win);
    box(win, 0, 0);
@@ -97,18 +103,13 @@ void handle_input(void) {
       _drawitems();
       key = wgetch(win);
       if (key == TOR_DOWN) {
-         if (mark < LINES - 3 && mark < end - 1) {
+         if (mark < LINES - 7 && mark < end - 1) {
             ++mark;
-
-            /* char command[64]; */
-            /* sprintf(command, "notify-send %d", end); */
-            /* system(command); */
-
          } else if (end < count) {
             ++end;
             ++start;
          } else {
-            end = count > LINES - 2 ? LINES - 2 : count;
+            end = count > LINES - 6 ? LINES - 6 : count;
             start = mark = 0;
          }
       } else if (key == TOR_UP) {

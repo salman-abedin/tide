@@ -3,7 +3,7 @@
 //==============================================================================
 
 /* vim bindings */
-   #define TOR_UP 'k'
+#define TOR_UP 'k'
 /* #define TOR_DOWN 'j' */
 /* #define TOR_START 'l' */
 /* #define TOR_STOP 'h' */
