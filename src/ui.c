@@ -125,8 +125,8 @@ void* handle_input() {
                --mark;
             } else {
                end = count;
-               mark = count > LINES - 2 ? LINES - 3 : count - 1;
-               start = count > LINES - 2 ? count - LINES + 2 : 0;
+               start = count > LINES - 6 ? count - LINES + 6 : 0;
+               /* mark = count > LINES - 6 ? LINES - 6 : count; */
             }
          }
       } else if (key == TOR_START) {
@@ -135,7 +135,6 @@ void* handle_input() {
          _send_args("-S");
       } else if (key == TOR_DELETE) {
          _send_args("-rad");
-         mark = mark > 0 ? mark - 1 : 0;
       } else if (key == KEY_RESIZE) {
          draw_ui();
       }
