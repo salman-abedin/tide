@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "../config.h"
 #include "_torrents.h"
@@ -11,6 +12,21 @@ char** items;
 char cmd_str[1024];
 WINDOW* win;
 Torrents torrents;
+
+void _draw_torrents() {
+   torrents = init_cmd(cmd_str);
+   count = torrents.count - 2;
+
+   if (old_count != count) {
+      old_count = count;
+      end = count > LINES - 6 ? LINES - 6 : count;
+   }
+
+   if (count > 0)
+      items = ++torrents.list;
+   else
+      items = torrents.list;
+}
 
 void init_ui(void) {
    initscr();
@@ -30,6 +46,8 @@ void init_ui(void) {
 
    old_count = init_cmd(cmd_str).count - 2;
    end = old_count > LINES - 6 ? LINES - 6 : old_count;
+
+   _draw_torrents();
 }
 
 void draw_ui(void) {
@@ -39,20 +57,7 @@ void draw_ui(void) {
    keypad(win, true);
 }
 
-void _drawitems(void) {
-   torrents = init_cmd(cmd_str);
-   count = torrents.count - 2;
-
-   if (old_count != count) {
-      old_count = count;
-      end = count > LINES - 6 ? LINES - 6 : count;
-   }
-
-   if (count > 0)
-      items = ++torrents.list;
-   else
-      items = torrents.list;
-
+void _draw_items(void) {
    werase(win);
    box(win, 0, 0);
 
@@ -82,6 +87,9 @@ void _drawitems(void) {
    wmove(win, LINES - 3, 1);
    whline(win, 0, COLS - 2);
    mvwaddnstr(win, LINES - 2, 1, count == 0 ? "" : items[count], COLS - 2);
+
+   refresh();
+   wrefresh(win);
 }
 
 void _send_args(char* arg) {
@@ -95,13 +103,9 @@ void _send_args(char* arg) {
    }
 }
 
-void handle_input(void) {
+void* handle_input() {
    int key;
-
-   halfdelay(10);
-   while (1) {
-      _drawitems();
-      key = wgetch(win);
+   while ((key = wgetch(win)) != TOR_QUIT) {
       if (key == TOR_DOWN) {
          if (mark < LINES - 7 && mark < end - 1) {
             ++mark;
@@ -134,9 +138,18 @@ void handle_input(void) {
          mark = mark > 0 ? mark - 1 : 0;
       } else if (key == KEY_RESIZE) {
          draw_ui();
-      } else if (key == TOR_QUIT) {
-         break;
       }
+      _draw_items();
+   }
+   housekeep();
+   exit(0);
+}
+
+void* get_torrents() {
+   while (1) {
+      _draw_torrents();
+      _draw_items();
+      sleep(2);
    }
 }
 
