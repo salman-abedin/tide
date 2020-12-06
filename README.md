@@ -63,7 +63,7 @@ sudo make uninstall
 
 -  **15/08/20**:- Rewrote the shellscript in C
 -  **02/09/20**:- Added remote access patch
--  06/12/20**:- Added some major performancd optimizations
+-  **06/12/20**:- Added some major performance optimizations
 
 ## TODOs
 
