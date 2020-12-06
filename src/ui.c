@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -8,9 +9,9 @@
 #include "ui.h"
 
 int mark, start, end, count, old_count, i, j;
-char** items;
+char **items;
 char cmd_str[1024];
-WINDOW* win;
+WINDOW *win;
 Torrents torrents;
 
 void _draw_torrents() {
@@ -92,7 +93,7 @@ void _draw_items(void) {
    wrefresh(win);
 }
 
-void _send_args(char* arg) {
+void _send_args(char *arg) {
    int id;
    char cmd[1024];
 
@@ -103,7 +104,7 @@ void _send_args(char* arg) {
    }
 }
 
-void* handle_input() {
+void *handle_input() {
    int key;
    while ((key = wgetch(win)) != TOR_QUIT) {
       if (key == TOR_DOWN) {
@@ -145,7 +146,7 @@ void* handle_input() {
    exit(0);
 }
 
-void* get_torrents() {
+void *get_torrents() {
    while (1) {
       _draw_torrents();
       _draw_items();

@@ -1,11 +1,10 @@
-#include "_torrents.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "../config.h"
+#include "_torrents.h"
 
 void _verify_running() {
    char cmd_str[1024];
@@ -34,8 +33,15 @@ Torrents init_cmd(char* cmd_str) {
    lines = 0;
    while (fgets(line, sizeof line, pipe)) {
       line[strcspn(line, "\n")] = 0;
-      torrents.list[lines] = calloc(sizeof line, sizeof(char));
-      strcpy(torrents.list[lines++], line);
+
+      /* torrents.list[lines] = calloc(sizeof line, sizeof(char)); */
+      /* strcpy(torrents.list[lines++], line); */
+
+      torrents.list[lines] = calloc(sizeof line, sizeof(char) + 1024);
+      strcpy(torrents.list[lines], line);
+      sprintf(torrents.list[lines] + strlen(torrents.list[lines]), "%-1024s",
+              " ");
+      ++lines;
 
       if (lines == capacity) {
          capacity *= 2;
