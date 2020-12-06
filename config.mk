@@ -10,4 +10,4 @@ BIN    = src/main
 
 LDLIBS = -s -lncurses -lpthread
 NAME    = tide
-VERSION = 8.0
+VERSION = 10.0
