@@ -1,4 +1,4 @@
-![](preview.gif)
+![](https://gitlab.com/salman-abedin/assets/-/raw/master/tide.gif)
 
 # tide: Minimal Transmission CLI client
 
@@ -17,6 +17,7 @@ tide is the successor to [tide.sh](https://github.com/salman-abedin/tide.sh)
 ## Libraries
 
 -  ncurses
+-  pthread
 
 ## Installation
 
@@ -58,11 +59,11 @@ git pull --no-rebase && sudo make install
 sudo make uninstall
 ```
 
-## Logs
+## Major Revisions
 
--  **27/07/20**:- Added scrolling support
 -  **15/08/20**:- Rewrote the shellscript in C
 -  **02/09/20**:- Added remote access patch
+-  06/12/20**:- Added some major performancd optimizations
 
 ## TODOs
 
