@@ -136,7 +136,7 @@ void *handle_input() {
          _send_args("-S");
       } else if (key == TOR_DELETE) {
          _send_args("-rad");
-         mark = mark > 0 ? mark - 1 : 0;
+         /* mark = mark > 0 ? mark - 1 : 0; */
       } else if (key == KEY_RESIZE) {
          draw_ui();
       }
