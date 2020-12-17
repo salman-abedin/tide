@@ -124,9 +124,9 @@ void* handle_input() {
             if (mark > 0) {
                --mark;
             } else {
-               end = count;
                start = count > LINES - 6 ? count - LINES + 6 : 0;
-               /* mark = count > LINES - 6 ? LINES - 6 : count; */
+               end = count;
+               mark = LINES - 7;
             }
          }
       } else if (key == TOR_START) {
